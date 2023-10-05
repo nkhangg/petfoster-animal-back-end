@@ -26,6 +26,6 @@ public class Test {
         
         String jwt = jwtProvider.generateToken(new UsernamePasswordAuthenticationToken(userRepository.findByUsername("hantl"), null, null));
         // AuthResponse authResponse = authService.login(loginRequest);
-        return ResponseEntity.ok(AuthResponse.builder().jwt(jwt).message("success").build());
+        return ResponseEntity.ok(AuthResponse.builder().token(jwt).message("success").build());
     }
 }

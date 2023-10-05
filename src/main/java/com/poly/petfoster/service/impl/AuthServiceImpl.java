@@ -1,6 +1,10 @@
 package com.poly.petfoster.service.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -10,8 +14,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.poly.petfoster.config.JwtProvider;
+import com.poly.petfoster.constant.PatternExpression;
+import com.poly.petfoster.constant.RespMessage;
+import com.poly.petfoster.entity.User;
+import com.poly.petfoster.repository.UserRepository;
 import com.poly.petfoster.request.LoginRequest;
 import com.poly.petfoster.request.RegisterRequest;
+import com.poly.petfoster.response.ApiResponse;
 import com.poly.petfoster.response.AuthResponse;
 import com.poly.petfoster.service.AuthService;
 import com.poly.petfoster.service.UserService;
@@ -21,6 +30,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -42,14 +54,63 @@ public class AuthServiceImpl implements AuthService {
 
         return AuthResponse.builder()
             .message("Login success")
-            .jwt(token)
+            .token(token)
             .build();
     }
 
     @Override
     public AuthResponse register(RegisterRequest registerReq) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'register'");
+        
+        Map<String, String> errorsMap = new HashMap<>();
+
+        if(PatternExpression.NOT_SPECIAL.matcher(registerReq.getUsername()).find()) {
+            errorsMap.put("username", "must not contains special characters!");
+            return AuthResponse.builder()
+                .message(HttpStatus.BAD_REQUEST.toString())
+                .errors(errorsMap)
+                .build();
+        }
+
+        if(userRepository.existsByUsername(registerReq.getUsername())) {
+            errorsMap.put("username", RespMessage.EXISTS);
+            return AuthResponse.builder()
+                .message(HttpStatus.CONFLICT.toString())
+                .errors(errorsMap)
+                .build();
+        }
+
+        if(userRepository.existsByEmail(registerReq.getEmail())) {
+            errorsMap.put("email", RespMessage.EXISTS);
+            return AuthResponse.builder()
+                .message(HttpStatus.CONFLICT.toString())
+                .errors(errorsMap)
+                .build();
+        }
+
+        if(!registerReq.getPassword().equals(registerReq.getConfirmPassword())) {
+            errorsMap.put("password confirm", "incorrect");
+            return AuthResponse.builder()
+                .message(HttpStatus.CONFLICT.toString())
+                .errors(errorsMap)
+                .build();
+        }
+
+        User newUser = User.builder()
+                        .username(registerReq.getUsername())
+                        .email(registerReq.getEmail())
+                        .password(passwordEncoder.encode(registerReq.getPassword()))
+                        .gender(registerReq.getGender())
+                        .fullname(registerReq.getFullname())
+                        .isActive(true)
+                        .build();
+
+        userRepository.save(newUser);
+
+        return AuthResponse.builder()
+            .message("Register success!!!")
+            .errors(false)
+            .build();
+
     }
 
     @Override
@@ -58,12 +119,12 @@ public class AuthServiceImpl implements AuthService {
         UserDetails userDetails = userService.findByUsername(username);
 
         if(userDetails == null) {
-            throw new BadCredentialsException("Invalid username");
+            throw new BadCredentialsException("User not found!!!");
         }
         
-        // if(!passwordEncoder.matches(password, userDetails.getPassword())) {
-        //     throw new BadCredentialsException("Invalid password");
-        // }
+        if(!passwordEncoder.matches(password, userDetails.getPassword())) {
+            throw new BadCredentialsException("Username or password incorrect!!!");
+        }
 
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
