@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetails findByUsername(String username) throws UsernameNotFoundException {
 
-        User existsUser = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        User existsUser = userRepository.findByUsername(username).get();
 
         List<GrantedAuthority> authorities = new ArrayList<>();
 

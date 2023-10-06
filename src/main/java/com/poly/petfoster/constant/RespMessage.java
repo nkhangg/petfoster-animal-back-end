@@ -12,17 +12,26 @@ public enum RespMessage {
 
     TOKEN_INVALID("Can't authentication because Token Invalid"),
     
-    USERNAME_ALREADY("Username already"),
+    USERNAME_ALREADY("Username already exists"),
 
-    EMAIl_ALREADY("Email already"),
+    EMAIl_ALREADY("Email already exists"),
 
-    INVALID_REQUEST("The request invalid");
+    INVALID_REQUEST("The request invalid"),
+
+    PASSWORD_INCORRECT("Your confirm password is incorrect!"),
+
+    INVALID("is invalid");
 
 
     private final String message;
 
+
     RespMessage(String message) { this.message = message; }
     
     public String getValue() { return message; }
+
+    public static final String NOT_EMPTY = "can't be empty";
+
+    public static final String EXISTS = "already exists!";
 
 }

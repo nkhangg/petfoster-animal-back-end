@@ -4,6 +4,8 @@ import javax.validation.constraints.NotBlank;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.poly.petfoster.constant.RespMessage;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,11 +17,11 @@ import lombok.NoArgsConstructor;
 @Builder
 public class LoginRequest {
 
-    @NotBlank(message = "Username can't be blank!")
+    @NotBlank(message = RespMessage.NOT_EMPTY)
     private String username;
 
-    @NotBlank(message = "Password can't be blank!")
-    @Length(min = 6, message = "Password is invalid!")
+    @NotBlank(message = RespMessage.NOT_EMPTY)
+    @Length(min = 6, message = "must be longer than 6 characters!")
     private String password;
 
 }
