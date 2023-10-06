@@ -46,6 +46,28 @@ public class AuthServiceImpl implements AuthService {
         String username = loginReq.getUsername();
         String password = loginReq.getPassword();
 
+        Map<String, String> errorsMap = new HashMap<>();
+        UserDetails userDetails;
+
+        try {
+            userDetails = userService.findByUsername(loginReq.getUsername());
+        } catch (Exception e) {
+            errorsMap.put("username", "user not found!");
+            return AuthResponse.builder()
+                .message(HttpStatus.NOT_FOUND.toString())
+                .errors(errorsMap)
+                .build();
+        }
+        
+        if(!passwordEncoder.matches(loginReq.getPassword(), userDetails.getPassword())) {
+            errorsMap.put("username", "username is incorrect, please try again!");
+            errorsMap.put("password", "password is incorrect, please try again!!");
+            return AuthResponse.builder()
+                .message(HttpStatus.BAD_REQUEST.toString())
+                .errors(errorsMap)
+                .build();
+        }
+
         Authentication authentication = authenticate(username, password);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -64,7 +86,7 @@ public class AuthServiceImpl implements AuthService {
         Map<String, String> errorsMap = new HashMap<>();
 
         if(PatternExpression.NOT_SPECIAL.matcher(registerReq.getUsername()).find()) {
-            errorsMap.put("username", "must not contains special characters!");
+            errorsMap.put("username", "username must not contains special characters!");
             return AuthResponse.builder()
                 .message(HttpStatus.BAD_REQUEST.toString())
                 .errors(errorsMap)
@@ -88,7 +110,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         if(!registerReq.getPassword().equals(registerReq.getConfirmPassword())) {
-            errorsMap.put("password confirm", "incorrect");
+            errorsMap.put("password confirm", "is incorrect");
             return AuthResponse.builder()
                 .message(HttpStatus.CONFLICT.toString())
                 .errors(errorsMap)
@@ -102,6 +124,7 @@ public class AuthServiceImpl implements AuthService {
                         .gender(registerReq.getGender())
                         .fullname(registerReq.getFullname())
                         .isActive(true)
+                        .role("User")
                         .build();
 
         userRepository.save(newUser);
