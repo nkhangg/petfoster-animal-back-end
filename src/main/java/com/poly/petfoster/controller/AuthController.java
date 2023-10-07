@@ -17,12 +17,12 @@ import com.poly.petfoster.service.AuthService;
 @RestController
 @RequestMapping("/api/")
 public class AuthController {
-    
+
     @Autowired
     AuthService authService;
 
     @PostMapping("login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest){
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(authService.login(loginRequest));
     }
 
