@@ -1,10 +1,13 @@
 package com.poly.petfoster.config;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import com.poly.petfoster.constant.JwtConstant;
@@ -22,11 +25,19 @@ public class JwtProvider {
 
         String jwt = Jwts.builder()
         .setIssuedAt(new Date())
-        .setExpiration(new Date(new Date().getTime()+846000000))
+        .setExpiration(new Date(new Date().getTime()+3600000))
         .claim("username", authentication.getName())
+        .claim("authorities", getAuthoritiesAsString(authentication))
         .signWith(key).compact();
 
         return jwt;
+    }
+
+    private String getAuthoritiesAsString(Authentication authentication) {
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        return authorities.stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.joining(","));
     }
 
     //Get username form jwt
