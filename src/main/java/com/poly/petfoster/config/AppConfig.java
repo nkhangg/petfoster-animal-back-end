@@ -31,7 +31,11 @@ public class AppConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-        .authorizeHttpRequests(Authorize -> Authorize.antMatchers("/api/auth/**").authenticated().anyRequest().permitAll())
+        .authorizeHttpRequests(Authorize -> 
+            Authorize
+                    .antMatchers("/api/admin/**").hasRole("ADMIN")
+                    .antMatchers("/api/user/**").authenticated()
+                     .anyRequest().permitAll())
         .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class)
         .csrf().disable()
         .httpBasic().and().formLogin();

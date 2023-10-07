@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +19,6 @@ import com.poly.petfoster.entity.User;
 import com.poly.petfoster.repository.UserRepository;
 import com.poly.petfoster.request.LoginRequest;
 import com.poly.petfoster.request.RegisterRequest;
-import com.poly.petfoster.response.ApiResponse;
 import com.poly.petfoster.response.AuthResponse;
 import com.poly.petfoster.service.AuthService;
 import com.poly.petfoster.service.UserService;
@@ -73,6 +71,14 @@ public class AuthServiceImpl implements AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = jwtProvider.generateToken(authentication);
+
+        if (userDetails.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ADMIN"))) {
+            return AuthResponse.builder()
+            .message(authentication.getAuthorities().iterator().next().getAuthority().toString())
+            .token(token)
+            .errors(authentication.getName())
+            .build();
+        }
 
         return AuthResponse.builder()
             .message("Login success")
@@ -140,14 +146,6 @@ public class AuthServiceImpl implements AuthService {
     public Authentication authenticate(String username, String password) {
         
         UserDetails userDetails = userService.findByUsername(username);
-
-        if(userDetails == null) {
-            throw new BadCredentialsException("User not found!!!");
-        }
-        
-        if(!passwordEncoder.matches(password, userDetails.getPassword())) {
-            throw new BadCredentialsException("Username or password incorrect!!!");
-        }
 
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
