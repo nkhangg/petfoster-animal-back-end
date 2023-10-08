@@ -8,9 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.poly.petfoster.entity.Pet;
-import com.poly.petfoster.repository.PetRespository;
+import com.poly.petfoster.repository.PetRepositoty;
 import com.poly.petfoster.response.ApiResponse;
+<<<<<<< Updated upstream
 import com.poly.petfoster.response.homepage.ApiHomePage;
+=======
+>>>>>>> Stashed changes
 import com.poly.petfoster.response.homepage.PetResponse;
 import com.poly.petfoster.service.PetService;
 
@@ -18,8 +21,44 @@ import com.poly.petfoster.service.PetService;
 public class PetServiceImpl implements PetService {
 
     @Autowired
-    PetRespository petRespository;
+    PetRepositoty petRepositoty;
 
+<<<<<<< Updated upstream
+=======
+    @Override
+    public ApiResponse findById(String petId) {
+
+        Pet p = petRepositoty.findByPetId(petId);
+
+        PetResponse petResponse = new PetResponse();
+
+        petResponse.setId(petId);
+        petResponse.setName(p.getPetName());
+        petResponse.setBreed(p.getPetBreed().getBreedName().toString());
+        petResponse.setImage(p.getImgs().get(0).getNameImg());
+        petResponse.setDescription(p.getDescriptions());
+        petResponse.setFostered(p.getFosterAt());
+        petResponse.setSize(p.getAge());
+        petResponse.setSex(p.getSex());
+        petResponse.setColor(p.getPetColor());
+        petResponse.setSterilizated(p.getIsSpay());
+        petResponse.setVaccinated(p.getVaccination());
+        petResponse.setFosterDate((int) (new Date().getTime() -
+                p.getFosterAt().getTime()) / (24 * 3600 * 1000));
+        List<String> imgs = new ArrayList<>();
+
+        p.getImgs().forEach(img -> {
+            imgs.add(img.getNameImg());
+        });
+
+        petResponse.setImgs(imgs);
+        petResponse.setLikes(p.getLikes());
+        petResponse.setType(p.getPetBreed().getPetType().getName().toString());
+
+        return ApiResponse.builder().message("Successfully!").status(200).errors(false)
+                .data(petResponse).build();
+    }
+>>>>>>> Stashed changes
 
     @Override
     public ApiResponse selectRecentPet() {
@@ -61,6 +100,7 @@ public class PetServiceImpl implements PetService {
 
 
     @Override
+<<<<<<< Updated upstream
     public Pet findByCreateAt(Date createAt) {
         // TODO Auto-generated method stub
         return null;
@@ -78,5 +118,10 @@ public class PetServiceImpl implements PetService {
     public Pet findByName(String name) {
         // TODO Auto-generated method stub
         return null;
+=======
+    public ApiResponse selectRecentPet() {
+        return ApiResponse.builder().message("Successfully!").status(200).errors(false)
+                .data(petRepositoty.selectRecentPet()).build();
+>>>>>>> Stashed changes
     }
 }

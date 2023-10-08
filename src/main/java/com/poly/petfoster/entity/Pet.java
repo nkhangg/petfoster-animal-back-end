@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 public class Pet {
-    
+
     @Id
     private String petId;
 
@@ -48,6 +48,10 @@ public class Pet {
     private String descriptions;
 
     private String adoptStatus;
+
+    private Integer likes;
+
+    private Boolean vaccination;
 
     @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL)
     @JsonIgnore
