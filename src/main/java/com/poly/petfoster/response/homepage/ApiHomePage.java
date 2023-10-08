@@ -4,5 +4,4 @@ import java.util.List;
 
 public class ApiHomePage {
         private List<PetResponse> pets;
-
 }
