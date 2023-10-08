@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 import com.poly.petfoster.entity.User;
 
 public interface UserRepository extends JpaRepository<User, String> {
-    
+
     @Query("select u from Users u where u.email = :email")
     public User findByEmail(@Param("email") String email);
 
