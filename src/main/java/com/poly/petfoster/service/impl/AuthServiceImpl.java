@@ -72,14 +72,6 @@ public class AuthServiceImpl implements AuthService {
 
         String token = jwtProvider.generateToken(authentication);
 
-        if (userDetails.getAuthorities().stream().anyMatch(authority -> authority.getAuthority().equals("ADMIN"))) {
-            return AuthResponse.builder()
-            .message(authentication.getAuthorities().iterator().next().getAuthority().toString())
-            .token(token)
-            .errors(authentication.getName())
-            .build();
-        }
-
         return AuthResponse.builder()
             .message("Login success")
             .token(token)
@@ -130,7 +122,7 @@ public class AuthServiceImpl implements AuthService {
                         .gender(registerReq.getGender())
                         .fullname(registerReq.getFullname())
                         .isActive(true)
-                        .role("User")
+                        .role("ROLE_USER")
                         .build();
 
         userRepository.save(newUser);
