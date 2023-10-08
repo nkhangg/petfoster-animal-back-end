@@ -35,7 +35,7 @@ public class AppConfig {
             Authorize
                     .antMatchers("/api/admin/**").hasRole("ADMIN")
                     .antMatchers("/api/user/**").authenticated()
-                     .anyRequest().permitAll())
+                    .anyRequest().permitAll())
         .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class)
         .csrf().disable()
         .httpBasic().and().formLogin();
