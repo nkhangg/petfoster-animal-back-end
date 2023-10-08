@@ -49,7 +49,7 @@ public class Pet {
 
     private String adoptStatus;
 
-    private Integer likes;
+    private Boolean likes;
 
     private Boolean vaccination;
 

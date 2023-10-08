@@ -1,10 +1,7 @@
 package com.poly.petfoster.response.homepage;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import com.poly.petfoster.entity.Imgs;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,10 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class PetResponse {
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
     private String id;
     private String breed;
     private String name;
@@ -30,7 +23,7 @@ public class PetResponse {
     private String sex;
     private String type;
     private Integer fosterDate;
-    private Integer likes;
+    private Boolean likes;
     private String color;
     private Boolean sterilizated;
     private Boolean vaccinated;

@@ -10,10 +10,7 @@ import org.springframework.stereotype.Service;
 import com.poly.petfoster.entity.Pet;
 import com.poly.petfoster.repository.PetRepositoty;
 import com.poly.petfoster.response.ApiResponse;
-<<<<<<< Updated upstream
 import com.poly.petfoster.response.homepage.ApiHomePage;
-=======
->>>>>>> Stashed changes
 import com.poly.petfoster.response.homepage.PetResponse;
 import com.poly.petfoster.service.PetService;
 
@@ -23,8 +20,6 @@ public class PetServiceImpl implements PetService {
     @Autowired
     PetRepositoty petRepositoty;
 
-<<<<<<< Updated upstream
-=======
     @Override
     public ApiResponse findById(String petId) {
 
@@ -39,7 +34,7 @@ public class PetServiceImpl implements PetService {
         petResponse.setDescription(p.getDescriptions());
         petResponse.setFostered(p.getFosterAt());
         petResponse.setSize(p.getAge());
-        petResponse.setSex(p.getSex());
+        petResponse.setSex(p.getSex() ? "Male" : "Female");
         petResponse.setColor(p.getPetColor());
         petResponse.setSterilizated(p.getIsSpay());
         petResponse.setVaccinated(p.getVaccination());
@@ -58,39 +53,35 @@ public class PetServiceImpl implements PetService {
         return ApiResponse.builder().message("Successfully!").status(200).errors(false)
                 .data(petResponse).build();
     }
->>>>>>> Stashed changes
 
     @Override
     public ApiResponse selectRecentPet() {
 
         List<PetResponse> pets = new ArrayList<>();
 
-
-        petRespository.selectRecentPet().stream().forEach(pet -> {
+        petRepositoty.selectRecentPet().stream().forEach(pet -> {
             pets.add(PetResponse.builder()
-            .id(pet.getPetId())
-            .breed(pet.getPetBreed().getBreedName())
-            .description(pet.getDescriptions())
-            .name(pet.getPetName())
-            .image("https://t0.gstatic.com/licensed-image?q=tbn:ANd9GcQkrjYxSfSHeCEA7hkPy8e2JphDsfFHZVKqx-3t37E4XKr-AT7DML8IwtwY0TnZsUcQ")
-            .type("dog")
-            .fosterDate(300)
-            .fostered(pet.getFosterAt())
-            .sex(pet.getSex() ? "Male" : "Female")
-            .size(pet.getAge())
-            .like(false)
-            .build());
-
+                    .id(pet.getPetId())
+                    .breed(pet.getPetBreed().getBreedName())
+                    .description(pet.getDescriptions())
+                    .name(pet.getPetName())
+                    .image("https://t0.gstatic.com/licensed-image?q=tbn:ANd9GcQkrjYxSfSHeCEA7hkPy8e2JphDsfFHZVKqx-3t37E4XKr-AT7DML8IwtwY0TnZsUcQ")
+                    .type("dog")
+                    .fosterDate(300)
+                    .fostered(pet.getFosterAt())
+                    .sex(pet.getSex() ? "Male" : "Female")
+                    .size(pet.getAge())
+                    .likes(false)
+                    .build());
         });
 
         return ApiResponse.builder()
-            .message("Successfully!")
-            .status(200)
-            .errors(false)
-            .data(ApiHomePage.builder().pets(pets).build())
-            .build();
+                .message("Successfully!")
+                .status(200)
+                .errors(false)
+                .data(ApiHomePage.builder().pets(pets).build())
+                .build();
     }
-
 
     @Override
     public Pet findByAge(Double minAge, Double maxAge) {
@@ -98,30 +89,16 @@ public class PetServiceImpl implements PetService {
         return null;
     }
 
-
     @Override
-<<<<<<< Updated upstream
     public Pet findByCreateAt(Date createAt) {
         // TODO Auto-generated method stub
         return null;
     }
 
-
-    @Override
-    public Pet findById(String petId) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-
     @Override
     public Pet findByName(String name) {
         // TODO Auto-generated method stub
         return null;
-=======
-    public ApiResponse selectRecentPet() {
-        return ApiResponse.builder().message("Successfully!").status(200).errors(false)
-                .data(petRepositoty.selectRecentPet()).build();
->>>>>>> Stashed changes
     }
+
 }
