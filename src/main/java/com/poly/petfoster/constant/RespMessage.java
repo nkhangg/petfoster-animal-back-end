@@ -20,6 +20,8 @@ public enum RespMessage {
 
     PASSWORD_INCORRECT("Your confirm password is incorrect!"),
 
+    NOT_FOUND("Can't found data"),
+
     INVALID("is invalid");
 
 
