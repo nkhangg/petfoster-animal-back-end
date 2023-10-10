@@ -20,9 +20,12 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProductRequest {
     @NotBlank(message = "Product ID can't be blank!")
-    private String id;  
+    private String id;
+    @NotBlank(message = "Product Name can't be blank!")  
     private String name;
+    @NotBlank(message = "Product Desciption can't be blank!")
     private String desc;
+    @NotBlank(message = "Product Type can't be blank!")
     private ProductType productType;
     private Boolean isActive;
     private List<ProductRepo> productsRepo ;

@@ -1,34 +1,67 @@
 package com.poly.petfoster.service.impl;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.poly.petfoster.entity.Product;
+import com.poly.petfoster.repository.ProductRepository;
 import com.poly.petfoster.request.product.ProductRequest;
-import com.poly.petfoster.request.product.GetProductRequest;
-
+import com.poly.petfoster.response.ApiResponse;
 import com.poly.petfoster.response.ProductResponse;
 import com.poly.petfoster.service.ProductService;
+
 
 @Service
 public class ProductServiceImpl implements ProductService {
     @Autowired
-    ProductService productService;
-    
+    private ProductRepository productRepository;
+
     @Override
-    public ProductResponse getProduct( GetProductRequest getProductReq){
+    public ApiResponse getAllProduct(){
         
-   
-        return ProductResponse.builder()
-        .id(null)
-        .name(null)
-        .desc(null)
-        .productType(null)
-        .isActive(null)
-        // .productsRepo(null)
-        // .orderDetails(null)
-        .imgs(null)
-        .build();
+        return ApiResponse.builder()
+            .message("Query product Successfully")
+            .status(null)
+            .errors(null)
+            .data(
+                productRepository.findAll()
+                )
+            .build(); 
+    }     
+    @Override
+    public ApiResponse getProduct( String id){
+
+                // Product updateProduct = productRepository.findById(id).orElse(null);
+
+
+        // List<Product> list =  new ArrayList<>();
+        // productRepository.save(null);
+        //  list.add(productRepository.findAll());
+        
+        
+//  ProductResponse.builder()
+//                 .id(id)
+//                 .name(product.getName())
+//                 .desc(product.getDesc())
+//                 .productType(product.getProductType())
+//                 .isActive(product.getIsActive())
+//                 .productsRepo(product.getProductsRepo())
+//                 .orderDetails(product.getOrderDetails())
+//                 .imgs(product.getImgs())
+//                 .build()
+
+        return ApiResponse.builder()
+            .message("Query product Successfully")
+            .status(null)
+            .errors(null)
+            .data(
+                null
+                )
+            .build();      
     };
     @Override
     public ProductResponse createProduct( ProductRequest ProductReq){
@@ -46,8 +79,14 @@ public class ProductServiceImpl implements ProductService {
         .build();
     };
     @Override
-    public ProductResponse updateProduct( ProductRequest ProductReq){
-  
+    public ProductResponse updateProduct(String id, ProductRequest ProductReq){
+        
+
+
+
+
+
+
         return ProductResponse.builder()
         .id(null)
         .name(null)
