@@ -2,27 +2,27 @@ package com.poly.petfoster.constant;
 
 public enum RespMessage {
 
-    SUCCESS("Successfully"), 
+    SUCCESS("Successfully!"), 
     
-    FAILURE("Failures"), 
+    FAILURE("Failures!"), 
     
-    INTERNAL_SERVER_ERROR("Internal Server Error"),
+    INTERNAL_SERVER_ERROR("Internal Server Error!"),
 
-    TOKEN_EXPIRED("Can't authentication because Token Expired"),
+    TOKEN_EXPIRED("Can't authenticate because Token Expired!"),
 
-    TOKEN_INVALID("Can't authentication because Token Invalid"),
+    TOKEN_INVALID("Can't authenticate because Token Invalid!"),
     
-    USERNAME_ALREADY("Username already exists"),
+    USERNAME_ALREADY("Username already exists!"),
 
-    EMAIl_ALREADY("Email already exists"),
+    EMAIl_ALREADY("Email already exists!"),
 
-    INVALID_REQUEST("The request invalid"),
+    INVALID_REQUEST("The request invalid!"),
 
     PASSWORD_INCORRECT("Your confirm password is incorrect!"),
 
-    NOT_FOUND("Can't found data"),
+    NOT_FOUND("Can't found data!"),
 
-    INVALID("is invalid");
+    INVALID("is invalid!");
 
 
     private final String message;
@@ -32,7 +32,7 @@ public enum RespMessage {
     
     public String getValue() { return message; }
 
-    public static final String NOT_EMPTY = "can't be empty";
+    public static final String NOT_EMPTY = "can't be empty!";
 
     public static final String EXISTS = "already exists!";
 

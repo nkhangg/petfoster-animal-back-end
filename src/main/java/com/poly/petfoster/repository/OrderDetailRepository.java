@@ -1,6 +1,9 @@
-package com.poly.petfoster.entity;
+package com.poly.petfoster.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.poly.petfoster.entity.OrderDetail;
+import com.poly.petfoster.entity.Product;
 
 import java.util.List;
 

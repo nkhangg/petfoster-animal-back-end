@@ -13,9 +13,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.poly.petfoster.constant.RespMessage;
-import com.poly.petfoster.entity.OrderDetailRepository;
 import com.poly.petfoster.entity.Product;
 import com.poly.petfoster.entity.ProductRepo;
+import com.poly.petfoster.repository.OrderDetailRepository;
 import com.poly.petfoster.repository.ProductRepoRepository;
 import com.poly.petfoster.repository.ProductRepository;
 import com.poly.petfoster.response.ApiResponse;

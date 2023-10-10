@@ -32,7 +32,7 @@ public class OrderDetail {
     @JoinColumn(name = "product_id")
     @JsonIgnore
     private Product product;
-
+    private String  size; // hot fix 10/10
     private Integer quantity;
 
     private Double total;
