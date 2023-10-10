@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.poly.petfoster.entity.Product;
@@ -35,31 +36,29 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ApiResponse getProduct( String id){
 
-                // Product updateProduct = productRepository.findById(id).orElse(null);
-
+        Product selectProduct = productRepository.findById(id).orElse(null);
 
         // List<Product> list =  new ArrayList<>();
         // productRepository.save(null);
         //  list.add(productRepository.findAll());
         
+          ProductResponse data =ProductResponse.builder()
+                .id(selectProduct.getId())
+                .name(selectProduct.getName())
+                .desc(selectProduct.getDesc())
+                .productType(selectProduct.getProductType())
+                .isActive(selectProduct.getIsActive())
+                .productsRepo(selectProduct.getProductsRepo())
+                .imgs(selectProduct.getImgs())
+                .build();
         
-//  ProductResponse.builder()
-//                 .id(id)
-//                 .name(product.getName())
-//                 .desc(product.getDesc())
-//                 .productType(product.getProductType())
-//                 .isActive(product.getIsActive())
-//                 .productsRepo(product.getProductsRepo())
-//                 .orderDetails(product.getOrderDetails())
-//                 .imgs(product.getImgs())
-//                 .build()
-
+            
         return ApiResponse.builder()
             .message("Query product Successfully")
-            .status(null)
+            .status(HttpStatus.OK.value())
             .errors(null)
             .data(
-                null
+                data
                 )
             .build();      
     };

@@ -32,16 +32,16 @@ public class ProductController {
     public ResponseEntity<ApiResponse> getProduct(@PathVariable("id") String id) {
         return ResponseEntity.ok(productService.getProduct(id));
     }
-    @PostMapping("create")
+    @PostMapping("")
     public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductRequest productRequest) {
         return ResponseEntity.ok(productService.createProduct(productRequest));
     }
-    @PutMapping("edit/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<ApiResponse> updateProduct(@PathVariable("id") String id ,@RequestBody ProductRequest productRequest) {
         return ResponseEntity.ok(productService.getProduct(id));
     }
-    // @DeleteMapping("delete/{id}")
-    // public ResponseEntity<ApiResponse> DeleteProduct(@PathVariable("id") String id ,@RequestBody ProductRequest productRequest) {
-    //     return ResponseEntity.ok(productService.getProduct(id));
-    // }
+    @DeleteMapping("{id}")
+    public ResponseEntity<ApiResponse> DeleteProduct(@PathVariable("id") String id ,@RequestBody ProductRequest productRequest) {
+        return ResponseEntity.ok(productService.getProduct(id));
+    }
 }
