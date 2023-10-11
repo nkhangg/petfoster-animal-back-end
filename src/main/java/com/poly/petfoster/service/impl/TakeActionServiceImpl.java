@@ -114,6 +114,7 @@ public class TakeActionServiceImpl implements TakeActionService{
 
         ProductRepo minRepo = productRepoRepository.findByProductMinRepo(product.getId());
 
+        // ProductRepo minPrice = productRepoRepository.findByProductMinPrice(product.getId());
 
         return ProductItem
         .builder()

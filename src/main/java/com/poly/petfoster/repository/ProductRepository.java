@@ -24,16 +24,22 @@ public interface ProductRepository extends JpaRepository<Product, String>{
 
     @Query("select p from Product p inner join p.productsRepo pr where " + 
     ":typeName is null or p.productType.name = :typeName " + 
-    "and (:minPrice is null and :maxPrice is null) or (pr.outPrice between :minPrice and :maxPrice) " +
+    "and ((:minPrice is null and :maxPrice is null) or (pr.outPrice between :minPrice and :maxPrice)) " +
     "and (:stock is null or pr.inStock = :stock) " +
-    "and (:brand is null or p.brand = :brand) "
+    "and (:brand is null or p.brand = :brand) " +
+    "and (:productName is null or p.name LIKE %:productName%) " +
+    "ORDER BY " +
+    "CASE WHEN :sort = 'low' THEN pr.outPrice END ASC, " +
+    "CASE WHEN :sort = 'hight' THEN pr.outPrice END DESC"
     )
     List<Product> filterProducts(
         @Param("typeName") String typeName, 
         @Param("minPrice") Double minPrice, 
         @Param("maxPrice") Double maxPrice,
         @Param("stock") Boolean stock,
-        @Param("brand") String brand
+        @Param("brand") String brand,
+        @Param("productName") String productName,
+        @Param("sort") String sort
         );
     
 }
