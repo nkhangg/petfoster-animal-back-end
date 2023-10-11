@@ -10,12 +10,14 @@ import javax.persistence.ManyToOne;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 public class OrderDetail {
     
@@ -32,7 +34,7 @@ public class OrderDetail {
     @JoinColumn(name = "product_id")
     @JsonIgnore
     private Product product;
-    private String  size; // hot fix 10/10
+    private Integer size; // hot fix 10/10
     private Integer quantity;
 
     private Double total;
