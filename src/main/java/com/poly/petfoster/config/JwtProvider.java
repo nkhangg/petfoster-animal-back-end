@@ -1,10 +1,13 @@
 package com.poly.petfoster.config;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 import javax.crypto.SecretKey;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 
 import com.poly.petfoster.constant.JwtConstant;
@@ -20,23 +23,27 @@ public class JwtProvider {
 
     public String generateToken(Authentication authentication) {
 
-        String jwt = Jwts.builder()
+        return Jwts.builder()
         .setIssuedAt(new Date())
-        .setExpiration(new Date(new Date().getTime()+846000000))
+        .setExpiration(new Date(new Date().getTime()+3600000))
         .claim("username", authentication.getName())
+        .claim("authorities", getAuthoritiesAsString(authentication))
         .signWith(key).compact();
+    }
 
-        return jwt;
+    private String getAuthoritiesAsString(Authentication authentication) {
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        return authorities.stream()
+            .map(GrantedAuthority::getAuthority)
+            .collect(Collectors.joining(","));
     }
 
     //Get username form jwt
-    public String getEmailFromToken(String jwt) {
+    public String getUsernameFromToken(String jwt) {
 
         jwt = jwt.substring(7);
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
-        String username = String.valueOf(claims.get("username"));
-
-        return username;
+        return String.valueOf(claims.get("username"));
 
     }
 }
