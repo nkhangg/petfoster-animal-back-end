@@ -15,12 +15,11 @@ import org.springframework.stereotype.Service;
 import com.poly.petfoster.constant.RespMessage;
 import com.poly.petfoster.entity.Product;
 import com.poly.petfoster.entity.ProductRepo;
-import com.poly.petfoster.repository.OrderDetailRepository;
 import com.poly.petfoster.repository.ProductRepoRepository;
 import com.poly.petfoster.repository.ProductRepository;
 import com.poly.petfoster.response.ApiResponse;
 import com.poly.petfoster.response.takeaction.BestSellersResponse;
-import com.poly.petfoster.response.takeaction.ProductTakeAction;
+import com.poly.petfoster.response.takeaction.ProductItem;
 import com.poly.petfoster.response.takeaction.TakeActionResponse;
 import com.poly.petfoster.service.TakeActionService;
 import com.poly.petfoster.ultils.PortUltil;
@@ -40,7 +39,7 @@ public class TakeActionServiceImpl implements TakeActionService{
     @Override
     public ApiResponse homePageTakeAction() {
 
-        List<ProductTakeAction> newArricals = new ArrayList<>();
+        List<ProductItem> newArricals = new ArrayList<>();
         productRepository.selectNewArrivals().stream().forEach((product) -> {
             newArricals.add(this.createProductTakeAction(product));
         });
@@ -66,7 +65,7 @@ public class TakeActionServiceImpl implements TakeActionService{
     public ApiResponse bestSellers(Optional<Integer> page) {
 
         // System.out.println(page.get());
-        List<ProductTakeAction> bestSellers = new ArrayList<>();
+        List<ProductItem> bestSellers = new ArrayList<>();
         Pageable pageable = PageRequest.of(page.orElse(0), 8);
         List<Product> contents = productRepository.findAllProducts();
 
@@ -88,7 +87,7 @@ public class TakeActionServiceImpl implements TakeActionService{
         Page<Product> pagination = new PageImpl<Product>(pageContent, pageable, contents.size());
 
         pagination.getContent().stream().forEach((product) -> {
-           ProductTakeAction productTakeAction = this.createProductTakeAction(product);
+           ProductItem productTakeAction = this.createProductTakeAction(product);
            bestSellers.add(productTakeAction);
         });
 
@@ -102,7 +101,7 @@ public class TakeActionServiceImpl implements TakeActionService{
         .build()).build();
     }
 
-    public ProductTakeAction createProductTakeAction(Product product){
+    public ProductItem createProductTakeAction(Product product){
         String image = "";
         int discount = 8;
         int rating = 5;
@@ -116,7 +115,7 @@ public class TakeActionServiceImpl implements TakeActionService{
         ProductRepo minRepo = productRepoRepository.findByProductMinRepo(product.getId());
 
 
-        return ProductTakeAction
+        return ProductItem
         .builder()
         .id(product.getId())
         .size(sizes)
