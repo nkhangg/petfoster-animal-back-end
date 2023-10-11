@@ -23,14 +23,12 @@ public class JwtProvider {
 
     public String generateToken(Authentication authentication) {
 
-        String jwt = Jwts.builder()
+        return Jwts.builder()
         .setIssuedAt(new Date())
         .setExpiration(new Date(new Date().getTime()+3600000))
         .claim("username", authentication.getName())
         .claim("authorities", getAuthoritiesAsString(authentication))
         .signWith(key).compact();
-
-        return jwt;
     }
 
     private String getAuthoritiesAsString(Authentication authentication) {
@@ -41,13 +39,11 @@ public class JwtProvider {
     }
 
     //Get username form jwt
-    public String getEmailFromToken(String jwt) {
+    public String getUsernameFromToken(String jwt) {
 
         jwt = jwt.substring(7);
         Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
-        String username = String.valueOf(claims.get("username"));
-
-        return username;
+        return String.valueOf(claims.get("username"));
 
     }
 }
