@@ -29,7 +29,7 @@ public class ReqExceptionHandler extends ResponseEntityExceptionHandler {
             });
 
             ApiResponse apiResponceErrors = ApiResponse.builder()
-                                            .message("User invalid")
+                                            .message("Data invalid")
                                             .status(status.value())
                                             .errors(errorMap)
                                             .build();
