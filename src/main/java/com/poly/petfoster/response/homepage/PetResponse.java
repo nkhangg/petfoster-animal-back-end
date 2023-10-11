@@ -1,12 +1,12 @@
 package com.poly.petfoster.response.homepage;
 
 import java.util.Date;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 
 @Data
 @AllArgsConstructor
@@ -23,6 +23,9 @@ public class PetResponse {
     private String sex;
     private String type;
     private Integer fosterDate;
-    private Boolean like;
-
+    private Boolean likes;
+    private String color;
+    private Boolean sterilizated;
+    private Boolean vaccinated;
+    private List<String> imgs;
 }
