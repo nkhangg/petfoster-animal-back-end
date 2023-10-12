@@ -23,5 +23,7 @@ public interface ProductRepoRepository extends JpaRepository<ProductRepo, Intege
     ProductRepo findByProductMinPrice(@Param("productId")String productId);
 
 
-    
+    @Query(nativeQuery = true, value = "select * from product_repo where product_id = :productId and size = :size")
+    public ProductRepo findProductRepoByIdAndSize(@Param("productId") String productId, @Param("size") Integer size);
+
 }
