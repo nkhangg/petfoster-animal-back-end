@@ -1,8 +1,10 @@
 package com.poly.petfoster.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,24 +35,9 @@ public class ProductFilterServiceImpl implements ProductFilterService {
     public ApiResponse filterProducts(Optional<String> typeName, Optional<Double> minPrice, Optional<Double> maxPrice, Optional<Boolean> stock, Optional<String> brand, Optional<String> productName, Optional<String> sort, Optional<Integer> page) {
 
         List<ProductItem> productItems = new ArrayList<>();
-        List<Product> products =  productRepository.filterProducts(typeName.orElse(null), minPrice.orElse(null), maxPrice.orElse(null), stock.orElse(null), brand.orElse(null), productName.orElse(null), sort.orElse(null));
+        List<Product> filterProducts =  productRepository.filterProducts(typeName.orElse(null), minPrice.orElse(null), maxPrice.orElse(null), stock.orElse(null), brand.orElse(null), productName.orElse(null), sort.orElse(null));
         Pageable pageable = PageRequest.of(page.orElse(0), 9);
-        List<Product> filterProducts = new ArrayList<>();
-
-        Boolean existsId = false;
-
-        for(Product product : products) {
-            for (Product filterProduct : filterProducts) {
-                if(filterProduct.getId().equals(product.getId())) {
-                    existsId = true;
-                    break;
-                }
-            }
-
-            if(!existsId) {
-                filterProducts.add(product);
-            }
-        }
+        // List<Product> filterProducts = new ArrayList<>();
 
         int startIndex = (int) pageable.getOffset();
         int endIndex = Math.min(startIndex + pageable.getPageSize(), filterProducts.size());

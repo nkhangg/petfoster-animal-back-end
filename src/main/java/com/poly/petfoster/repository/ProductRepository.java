@@ -1,10 +1,7 @@
 package com.poly.petfoster.repository;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -22,16 +19,18 @@ public interface ProductRepository extends JpaRepository<Product, String>{
     +"where p.product_id in ( select top 100 product_id from order_detail group by product_id ) ")
     List<Product> findAllProducts();
 
-    @Query("select p from Product p inner join p.productsRepo pr where " + 
-    ":typeName is null or p.productType.name = :typeName " + 
-    "and ((:minPrice is null and :maxPrice is null) or (pr.outPrice between :minPrice and :maxPrice)) " +
-    "and (:stock is null or pr.inStock = :stock) " +
-    "and (:brand is null or p.brand = :brand) " +
-    "and (:productName is null or p.name LIKE %:productName%) " +
-    "ORDER BY " +
-    "CASE WHEN :sort = 'low' THEN pr.outPrice END ASC, " +
-    "CASE WHEN :sort = 'hight' THEN pr.outPrice END DESC"
-    )
+    @Query("SELECT p, MIN(pr.outPrice) FROM Product p " +
+       "INNER JOIN p.productsRepo pr " +
+       "WHERE (:typeName IS NULL OR p.productType.name = :typeName) " +
+       "AND ((:minPrice IS NULL AND :maxPrice IS NULL) OR (pr.outPrice BETWEEN :minPrice AND :maxPrice)) " +
+       "AND (:stock IS NULL OR pr.inStock = :stock) " +
+       "AND (:brand IS NULL OR p.brand = :brand) " +
+       "AND (:productName IS NULL OR p.name LIKE %:productName%) " +
+       "GROUP BY p.id, p.name, p.desc, p.isActive, p.brand, p.createAt, p.productType.id  " +
+       "ORDER BY " +
+       "CASE WHEN :sort = 'low' THEN MIN(pr.outPrice) END ASC, " +
+       "CASE WHEN :sort = 'high' THEN MIN(pr.outPrice) END DESC")
+    
     List<Product> filterProducts(
         @Param("typeName") String typeName, 
         @Param("minPrice") Double minPrice, 
