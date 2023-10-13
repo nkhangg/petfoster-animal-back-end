@@ -1,5 +1,8 @@
 package com.poly.petfoster.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,6 +19,7 @@ import com.poly.petfoster.constant.PatternExpression;
 import com.poly.petfoster.constant.RespMessage;
 import com.poly.petfoster.entity.User;
 import com.poly.petfoster.repository.UserRepository;
+import com.poly.petfoster.request.ProfileRepuest;
 import com.poly.petfoster.response.ApiResponse;
 import com.poly.petfoster.response.AuthResponse;
 import com.poly.petfoster.response.ProfileResponse;
@@ -42,48 +46,55 @@ public class ProfileServiceImpl implements ProfileService {
   }
 
   @Override
-  public ApiResponse updateProfile(ProfileResponse profileResponse) {
-    Map<String, String> errorsMap = new HashMap<>();
+  public ApiResponse updateProfile(ProfileRepuest profileRepuest, String token) {
+      Map<String, String> errorsMap = new HashMap<>();
+      String username = jwtProvider.getUsernameFromToken(token);
 
-    if (PatternExpression.NOT_SPECIAL.matcher(profileResponse.getUsername()).find()) {
-      errorsMap.put("username", "username must not contains special characters!");
-      return ApiResponse.builder()
-          .message(HttpStatus.BAD_REQUEST.toString())
-          .errors(errorsMap)
-          .build();
-    }
+      User user = userRepository.findByUsername(username).orElse(null);
 
-    if (userRepository.existsByUsername(profileResponse.getUsername())) {
-      errorsMap.put("username", RespMessage.EXISTS);
-      return ApiResponse.builder()
-          .message(HttpStatus.CONFLICT.toString())
-          .errors(errorsMap)
-          .build();
-    }
 
-    if (userRepository.existsByEmail(profileResponse.getEmail())) {
-      errorsMap.put("email", RespMessage.EXISTS);
-      return ApiResponse.builder()
-          .message(HttpStatus.CONFLICT.toString())
-          .errors(errorsMap)
-          .build();
-    }
+      if(user == null){
+        return  ApiResponse.builder()
+                  .message("User not found !")
+                  .status(HttpStatus.NOT_FOUND.value())
+                  .errors(true)
+                  .data(null)
+                  .build();
+      }
 
-    User profileUser = User.builder()
-                      .username(profileResponse.getUsername())
-                      .email(profileResponse.getEmail())
-                      .gender(profileResponse.getGender())
-                      .phone(profileResponse.getPhone())
-                      .fullname(profileResponse.getFullname())
-                      .birthday(profileResponse.getBirthday())
-                      .build();
-  
-      userRepository.save(profileUser);
+      if(!user.getEmail().equals(profileRepuest.getEmail())){
+          errorsMap.put("email", "Can't update email !");
+      }
+
+
+      try {
+          Date birthday = new SimpleDateFormat("D/MM/yyyy").parse(profileRepuest.getBirthday());
+          user.setBirthday(birthday);
+      } catch (ParseException e) {
+          errorsMap.put("birthday", "Birthday invalid !");
+      }  
+      
+
+      
+      // check errors
+      if(!errorsMap.isEmpty()){
+          return ApiResponse.builder()
+                          .message("Update faild !")
+                          .errors(errorsMap)
+                          .data(null)
+                          .build();
+      }
+
+      user.setFullname(profileRepuest.getFullname());
+      user.setGender(profileRepuest.getGender());
+      user.setAddress(profileRepuest.getAddress());
+      user.setPhone(profileRepuest.getPhone());
 
       return ApiResponse.builder()
                         .message("Update success!")
                         .errors(false)
+                        .data(userRepository.save(user))
                         .build();
-  }
+    }
 
 }

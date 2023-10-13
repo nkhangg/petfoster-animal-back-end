@@ -54,8 +54,10 @@ public class User {
 
 	private String role;
 
+	@Column(name = "create_at")
 	private Date createAt;
     
+	@JsonIgnore
 	private Boolean isActive;
 	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

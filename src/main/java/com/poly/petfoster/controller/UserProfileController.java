@@ -10,10 +10,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.poly.petfoster.request.RegisterRequest;
+import com.poly.petfoster.request.ProfileRepuest;
 import com.poly.petfoster.response.ApiResponse;
-import com.poly.petfoster.response.AuthResponse;
-import com.poly.petfoster.response.ProfileResponse;
 import com.poly.petfoster.service.ProfileService;
 
 @RestController
@@ -29,8 +27,8 @@ public class UserProfileController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<ApiResponse> register(@Valid @RequestBody ProfileResponse profileResponse) {
-        return ResponseEntity.ok(profileService.updateProfile(profileResponse));
+    public ResponseEntity<ApiResponse> register(@Valid @RequestBody ProfileRepuest profileRepuest, @RequestHeader("Authorization") String jwt) {
+        return ResponseEntity.ok(profileService.updateProfile(profileRepuest, jwt));
     }
 
 
