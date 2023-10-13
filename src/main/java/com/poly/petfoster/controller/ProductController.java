@@ -33,7 +33,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProduct(id));
     }
     @PostMapping("")
-    public ResponseEntity<ProductResponse> createProduct(@RequestBody ProductRequest productRequest) {
+    public ResponseEntity<ApiResponse> createProduct(@RequestBody ProductRequest productRequest) {
         return ResponseEntity.ok(productService.createProduct(productRequest));
     }
     @PutMapping("{id}")

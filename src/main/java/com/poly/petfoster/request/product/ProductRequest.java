@@ -29,6 +29,6 @@ public class ProductRequest {
     private ProductType productType;
     private Boolean isActive;
     private List<ProductRepo> productsRepo ;
-    private List<OrderDetail> orderDetails;
+    // private List<OrderDetail> orderDetails;
     private List<Imgs> imgs;
 }
