@@ -83,20 +83,32 @@
 			"name": "statistical",
 			"item": [
 				{
-					"name": "[auth]Daily Report",
+					"name": "Report Daily",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTY3NTE0ODAsImV4cCI6MTY5Njc1NTA4MCwidXNlcm5hbWUiOiJoYW50bDEiLCJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4ifQ.a0fIteGDrSvTVKeRDvYUbtS1CzCCT743ViroAquddC-bdI7qMz0jsGQSMCy5ZqGH_fIs4EDXKMilrQAWkEhS2g",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTcxMTc2MTQsImV4cCI6MTY5NzEyMTIxNCwidXNlcm5hbWUiOiJoYW50bDEiLCJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4ifQ.lAMoaT5TPOJiiLLm5IE2IJKXK0-o71F3_lbXt7g4RwebmA-t2czN4q1SukV-y14NTb5PWy6tOmp4Z7iv4vZp1Q",
 									"type": "string"
 								}
 							]
 						},
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "http://localhost:8019/api/admin/report/daily",
 							"protocol": "http",
@@ -115,52 +127,34 @@
 					"response": []
 				},
 				{
-					"name": "[auth]Report Impact Of Year",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8019/api/impact-of-year",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8019",
-							"path": [
-								"api",
-								"impact-of-year"
-							]
-						}
+					"name": "Report Sales Overview",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
 					},
-					"response": []
-				},
-				{
-					"name": "[auth]Revenue By Month",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTY3NDcyMjcsImV4cCI6MTY5Njc1MDgyNywidXNlcm5hbWUiOiJoYW50bDEiLCJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4ifQ.US_PuRNxj6XccRR_8zkksh1hJODlMGClA2DkuGyp6bLhl4PJjuZQ5fFCovG9_X5EtWJaIQ0aIQ2GsMPCipmi7g",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTcxMzIwMTAsImV4cCI6MTY5NzEzNTYxMCwidXNlcm5hbWUiOiJoYW50bDEiLCJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4ifQ.7_Z6y5d-O9dMVRGPZ4ebIz0KUfKVl4Pt6z-lpKnB3HWo-XYu1lKoHBZFrm6udGa2hUVi4739sDt8avY1p7HgjA",
 									"type": "string"
 								}
 							]
 						},
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8019/api/admin/report/revenue-by-month?month=10",
+							"raw": "http://localhost:8019/api/admin/report/sales-overview/?year=2023",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -170,83 +164,8 @@
 								"api",
 								"admin",
 								"report",
-								"revenue-by-month"
-							],
-							"query": [
-								{
-									"key": "month",
-									"value": "10"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[auth]Revenue By Date",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTY3NDU0MzgsImV4cCI6MTY5Njc0OTAzOCwidXNlcm5hbWUiOiJoYW50bDEiLCJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4ifQ.94TnHKLg680FdByY-mWLpC0VUz5VDuFR951F299s20OplQp5271whaGEAkQYn-_dFPzY95qJ68R2MK0maDoSBA",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8019/api/admin/report/revenue-by-date?date=2023-10-08",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8019",
-							"path": [
-								"api",
-								"admin",
-								"report",
-								"revenue-by-date"
-							],
-							"query": [
-								{
-									"key": "date",
-									"value": "2023-10-08"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[auth]Revenue By Year",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTY3NTAwMDMsImV4cCI6MTY5Njc1MzYwMywidXNlcm5hbWUiOiJoYW50bDEiLCJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4ifQ.vzTia4Z0qwZLAsqaLiBM-4Fm3NRgA2YdnnOiOk9UdmfYNp6_eRDzN9Fds0NzuwhtTeKHj-bc-3dPrWwdulguOg",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8019/api/admin/report/revenue-by-year?year=2023",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8019",
-							"path": [
-								"api",
-								"admin",
-								"report",
-								"revenue-by-year"
+								"sales-overview",
+								""
 							],
 							"query": [
 								{
@@ -259,14 +178,14 @@
 					"response": []
 				},
 				{
-					"name": "[auth]Report Revenue By Product Type",
+					"name": "Report Product Revenue By Date",
 					"request": {
 						"auth": {
 							"type": "bearer",
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTY3NTE2NzEsImV4cCI6MTY5Njc1NTI3MSwidXNlcm5hbWUiOiJoYW50bDEiLCJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4ifQ.uy78tkNhisEtc3rOKzpna_DKtm_GCrcMYwNSz4DuzC6jag_HPCV_avLXnaCHQ6y3P8fpPlcvHiHE3NkFSEVHhQ",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTcxNjI5NjYsImV4cCI6MTY5NzE2NjU2NiwidXNlcm5hbWUiOiJoYW50bDEiLCJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4ifQ.9y6_QL4pTr7D0Ftc_M6Whv63ym35zBhhFpy60xUA4H494SCOQoNwOstiHVChoGsm_CGOw5TUV7aw58vCvmhC8g",
 									"type": "string"
 								}
 							]
@@ -274,7 +193,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8019/api/admin/report/revenue-by-product-type",
+							"raw": "http://localhost:8019/api/admin/report/product-revenue-by-date?minDate=2023-10-01&maxDate=2023-10-10",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -284,44 +203,16 @@
 								"api",
 								"admin",
 								"report",
-								"revenue-by-product-type"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[auth]Revenue By Time",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTY3NTExMzAsImV4cCI6MTY5Njc1NDczMCwidXNlcm5hbWUiOiJoYW50bDEiLCJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4ifQ.oCWlJbP0Xc039_nKcBWyxd11rjG86iLIj5URZZ9LWiW7h4JeCV_YD0a5hbUV_4X1QXfgm192NLjtJWlKAeoaIw",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8019/api/admin/report/revenue-by-time?date=2023-10-08",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8019",
-							"path": [
-								"api",
-								"admin",
-								"report",
-								"revenue-by-time"
+								"product-revenue-by-date"
 							],
 							"query": [
 								{
-									"key": "date",
-									"value": "2023-10-08"
+									"key": "minDate",
+									"value": "2023-10-01"
+								},
+								{
+									"key": "maxDate",
+									"value": "2023-10-10"
 								}
 							]
 						}
@@ -448,8 +339,85 @@
 				{
 					"name": "[auth]Update-profile",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTcwMzc1NDIsImV4cCI6MTY5NzA0MTE0MiwidXNlcm5hbWUiOiJraGFuZ3BuMSIsImF1dGhvcml0aWVzIjoiUk9MRV9BRE1JTiJ9.TAhbbwNpoX8Wk6UMZVBzsBv-hmHxef--Ev3JAWkSKx8F35lXZGX_oBy8W6gnEpZfZadBoDNHBHLm2bXRrY8yzA",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
-						"header": []
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"dc9d7109-6c0b-486f-b9e9-31266c2f8534\",\r\n    \"username\": \"khangpn1\",\r\n    \"fullname\": \"Pham Nhut Khang 123\",\r\n    \"phone\": \"123456\",\r\n    \"email\": \"ha1@gmail.com\",\r\n    \"gender\": \"false\",\r\n    \"birthday\": \"12/2/2023\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8019/api/user/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8019",
+							"path": [
+								"api",
+								"user",
+								"update"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "[auth]orther",
+			"item": [
+				{
+					"name": "[auth]payment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTcwNDAwOTQsImV4cCI6MTY5NzA0MzY5NCwidXNlcm5hbWUiOiJraGFuZ3BuMSIsImF1dGhvcml0aWVzIjoiUk9MRV9BRE1JTiJ9.KQuyYQDTY5VTRY_b30guyBUlZCLF0c-mIhSIEGz-76N7F_Eir1-VbMX_FBW_HtWdhm3IGvnz5w2xPmw5fBQoLA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"fullname\": \"ha nguyen\",\r\n    \"address\": \"1\",\r\n    \"phone\": \"0123456789\",\r\n    \"shippingFee\": 1,\r\n    \"orderProducts\": [\r\n        {\r\n            \"productId\": \"PD0001\",\r\n            \"size\": 250,\r\n            \"quantity\": 2\r\n        },\r\n        {\r\n            \"productId\": \"PD0001\",\r\n            \"size\": 500,\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"productId\": \"PD0002\",\r\n            \"size\": 200,\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8019/api/user/order",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8019",
+							"path": [
+								"api",
+								"user",
+								"order"
+							]
+						}
 					},
 					"response": []
 				}

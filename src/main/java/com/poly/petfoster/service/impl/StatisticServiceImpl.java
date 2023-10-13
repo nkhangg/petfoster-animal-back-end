@@ -11,16 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.poly.petfoster.dto.Revenue;
 import com.poly.petfoster.repository.AdoptRepository;
-import com.poly.petfoster.repository.DailyReportRepository;
 import com.poly.petfoster.repository.DonateRepository;
 import com.poly.petfoster.repository.OrdersRepository;
 import com.poly.petfoster.repository.PetRepositoty;
 import com.poly.petfoster.repository.RevenueRepository;
-import com.poly.petfoster.response.statistic.DailyReportResponse;
 import com.poly.petfoster.response.statistic.ImpactItemResponse;
 import com.poly.petfoster.response.statistic.ImpactsResponse;
-import com.poly.petfoster.response.statistic.RevenueByTimeResponse;
-import com.poly.petfoster.response.statistic.RevenueByProductTypeResponse;
 import com.poly.petfoster.service.StatisticService;
 
 @Service
@@ -38,8 +34,6 @@ public class StatisticServiceImpl implements StatisticService {
     @Autowired
     RevenueRepository revenueRepository;
 
-    @Autowired
-    DailyReportRepository dailyReportRepository;
 
     @Autowired
     OrdersRepository ordersRepository;
@@ -56,35 +50,5 @@ public class StatisticServiceImpl implements StatisticService {
         return ImpactsResponse.builder().impactOfYear(impactOfYear).build();
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public RevenueByProductTypeResponse getRevenueByProductType() {
-        
-        List<Revenue> revenues = revenueRepository.getRevenueByProductType();
-
-        return RevenueByProductTypeResponse.builder().revenueByProductType(revenues).build();
-
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public DailyReportResponse getDailyReport() {
-       return DailyReportResponse.builder().dailyReport(dailyReportRepository.getDailyReport()).build();
-    }
-
-    @Override
-    public RevenueByTimeResponse getRevenueByDate(Date date) {
-        return RevenueByTimeResponse.builder().revenueByDate(ordersRepository.getRevenueByDate(date)).build();
-    }
-    
-    @Override
-    public RevenueByTimeResponse getRevenueByMonth(Integer month) {
-        return RevenueByTimeResponse.builder().revenueByMonth(ordersRepository.getRevenueByMonth(month)).build();
-    }
-
-    @Override
-    public RevenueByTimeResponse getRevenueByYear(Integer year) {
-        return RevenueByTimeResponse.builder().revenueByYear(ordersRepository.getRevenueByYear(year)).build();
-    }
 
 }

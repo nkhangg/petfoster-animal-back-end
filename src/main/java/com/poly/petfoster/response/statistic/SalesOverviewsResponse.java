@@ -1,7 +1,5 @@
 package com.poly.petfoster.response.statistic;
 
-import com.poly.petfoster.dto.DailyReport;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DailyReportResponse {
-    private DailyReport dailyReport;
+public class SalesOverviewsResponse {
+    
+    private SalesOverview salesOverview;
+
 }

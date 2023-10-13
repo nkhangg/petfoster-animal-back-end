@@ -25,5 +25,6 @@ public interface ProductRepoRepository extends JpaRepository<ProductRepo, Intege
 
     @Query(nativeQuery = true, value = "select * from product_repo where product_id = :productId and size = :size")
     public ProductRepo findProductRepoByIdAndSize(@Param("productId") String productId, @Param("size") Integer size);
+    
 
 }
