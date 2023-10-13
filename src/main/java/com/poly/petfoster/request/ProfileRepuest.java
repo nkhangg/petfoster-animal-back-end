@@ -5,6 +5,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.poly.petfoster.constant.RespMessage;
 
 import lombok.AllArgsConstructor;
@@ -35,6 +37,7 @@ public class ProfileRepuest {
 
     @NotBlank(message = RespMessage.NOT_EMPTY)
     private String address;
+
 
     
 }

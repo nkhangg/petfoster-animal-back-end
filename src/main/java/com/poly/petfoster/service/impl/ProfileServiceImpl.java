@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.poly.petfoster.config.JwtProvider;
 import com.poly.petfoster.constant.JwtConstant;
@@ -46,7 +47,7 @@ public class ProfileServiceImpl implements ProfileService {
   }
 
   @Override
-  public ApiResponse updateProfile(ProfileRepuest profileRepuest, String token) {
+  public ApiResponse updateProfile(ProfileRepuest profileRepuest, MultipartFile avartar, String token) {
       Map<String, String> errorsMap = new HashMap<>();
       String username = jwtProvider.getUsernameFromToken(token);
 
@@ -73,6 +74,16 @@ public class ProfileServiceImpl implements ProfileService {
       } catch (ParseException e) {
           errorsMap.put("birthday", "Birthday invalid !");
       }  
+
+
+      if(avartar != null){
+        if(avartar.getSize() > 5000){
+            errorsMap.put("avartar", "Image size is too large");
+        }else{
+            user.setAvatar(avartar.getOriginalFilename());
+            // avartar.transferTo(null)
+        }
+      }
       
 
       
@@ -85,10 +96,14 @@ public class ProfileServiceImpl implements ProfileService {
                           .build();
       }
 
+      
+
       user.setFullname(profileRepuest.getFullname());
       user.setGender(profileRepuest.getGender());
       user.setAddress(profileRepuest.getAddress());
       user.setPhone(profileRepuest.getPhone());
+
+      System.out.println(avartar.getOriginalFilename());
 
       return ApiResponse.builder()
                         .message("Update success!")
