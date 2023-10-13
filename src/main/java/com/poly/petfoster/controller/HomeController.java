@@ -21,4 +21,5 @@ public class HomeController {
     public ResponseEntity<ApiResponse> home() {
         return ResponseEntity.ok(petService.selectRecentPet());
     }
+
 }

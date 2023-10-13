@@ -113,7 +113,7 @@ public class TakeActionServiceImpl implements TakeActionService{
 
         List<Integer> sizes = productRepoRepository.findSizeByProduct(product.getId());
 
-        ProductRepo minRepo = productRepoRepository.findByProductMinRepo(product.getId());
+        ProductRepo minRepo = productRepoRepository.findByProductMinPrice(product.getId());
 
 
         return ProductTakeAction

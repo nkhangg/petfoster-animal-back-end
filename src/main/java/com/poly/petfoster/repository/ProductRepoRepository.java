@@ -16,16 +16,11 @@ public interface ProductRepoRepository extends JpaRepository<ProductRepo, Intege
     @Query("select rp.size from ProductRepo rp where rp.product.id = :productId order by rp.size asc")
     List<Integer> findSizeByProduct(@Param("productId")String productId);
 
-    @Query(nativeQuery = true, value = "select top 1 * from product_repo where product_id = :productId order by size asc")
-    ProductRepo findByProductMinRepo(@Param("productId")String productId);
-<<<<<<< Updated upstream
-=======
 
     @Query(nativeQuery = true, value = "select top 1 * from product_repo where product_id = :productId order by out_price asc")
     ProductRepo findByProductMinPrice(@Param("productId")String productId);
 
     @Query(nativeQuery = true, value = "select * from product_repo where product_id = :productId and size = :size")
     public ProductRepo findProductRepoByIdAndSize(@Param("productId") String productId, @Param("size") Integer size);
->>>>>>> Stashed changes
     
 }

@@ -1,5 +1,8 @@
 package com.poly.petfoster.response.statistic;
 
+import java.util.List;
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,12 +12,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RevenueByTimeResponse {
-    
-    private Double revenueByDate;
+public class ProductRevenueByDate {
 
-    private Double revenueByMonth;
-
-    private Double revenueByYear;
+    private List<Map<String, Object>> data;
+    private Integer total;
 
 }

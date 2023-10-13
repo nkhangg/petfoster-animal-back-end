@@ -62,5 +62,6 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Imgs> imgs = new ArrayList<>();
+
 }
 
