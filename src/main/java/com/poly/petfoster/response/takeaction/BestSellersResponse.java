@@ -1,4 +1,4 @@
-package com.poly.petfoster.response.homepage;
+package com.poly.petfoster.response.takeaction;
 
 import java.util.List;
 
@@ -7,10 +7,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Data
-public class ApiHomePage {
-        private List<PetResponse> pets;
+public class BestSellersResponse {
+    private List<ProductItem> data;
+    private Integer pages;
 }

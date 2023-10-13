@@ -1,6 +1,7 @@
 package com.poly.petfoster.entity;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -10,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -40,6 +43,14 @@ public class Product {
 
     private Boolean isActive;
 
+
+    // brand of product
+    private String brand;
+
+    @CreationTimestamp
+    @Column(name = "create_at")
+    private Date createAt;
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<ProductRepo> productsRepo = new ArrayList<>();
@@ -51,5 +62,6 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Imgs> imgs = new ArrayList<>();
+
 }
 

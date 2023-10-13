@@ -10,6 +10,7 @@ import com.poly.petfoster.entity.User;
 
 public interface UserRepository extends JpaRepository<User, String> {
 
+
     Boolean existsByUsername(String username);
 
     Boolean existsByEmail(String email);
@@ -22,4 +23,8 @@ public interface UserRepository extends JpaRepository<User, String> {
     @Query("select u from Users u where u.username = :username")
     public Optional<User> findByUsername(@Param("username") String username);
 
+    @Query(nativeQuery = true, 
+    value ="select count(*) from users where is_active = 'true'")
+    public Integer getTotalUsers();
+    
 }
