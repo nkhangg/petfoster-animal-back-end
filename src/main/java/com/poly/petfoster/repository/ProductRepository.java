@@ -2,10 +2,9 @@ package com.poly.petfoster.repository;
 
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.poly.petfoster.entity.Product;
 
@@ -19,4 +18,27 @@ public interface ProductRepository extends JpaRepository<Product, String>{
     @Query(nativeQuery = true, value = "select * from product p join product_type t on t.product_type_id = p.[type_id] "
     +"where p.product_id in ( select top 100 product_id from order_detail group by product_id ) ")
     List<Product> findAllProducts();
+
+    @Query("SELECT p, MIN(pr.outPrice) FROM Product p " +
+       "INNER JOIN p.productsRepo pr " +
+       "WHERE (:typeName IS NULL OR p.productType.name = :typeName) " +
+       "AND ((:minPrice IS NULL AND :maxPrice IS NULL) OR (pr.outPrice BETWEEN :minPrice AND :maxPrice)) " +
+       "AND (:stock IS NULL OR pr.inStock = :stock) " +
+       "AND (:brand IS NULL OR p.brand = :brand) " +
+       "AND (:productName IS NULL OR p.name LIKE %:productName%) " +
+       "GROUP BY p.id, p.name, p.desc, p.isActive, p.brand, p.createAt, p.productType.id  " +
+       "ORDER BY " +
+       "CASE WHEN :sort = 'low' THEN MIN(pr.outPrice) END ASC, " +
+       "CASE WHEN :sort = 'high' THEN MIN(pr.outPrice) END DESC")
+    
+    List<Product> filterProducts(
+        @Param("typeName") String typeName, 
+        @Param("minPrice") Double minPrice, 
+        @Param("maxPrice") Double maxPrice,
+        @Param("stock") Boolean stock,
+        @Param("brand") String brand,
+        @Param("productName") String productName,
+        @Param("sort") String sort
+        );
+    
 }

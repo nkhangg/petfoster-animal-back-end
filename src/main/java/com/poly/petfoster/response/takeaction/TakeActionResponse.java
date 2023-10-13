@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class TakeActionResponse {
-    private List<ProductTakeAction> newArrivals;
+    private List<ProductItem> newArrivals;
 }
