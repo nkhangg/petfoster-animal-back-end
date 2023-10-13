@@ -49,12 +49,15 @@ public class User {
 
 	private String email;
 
+	@JsonIgnore
 	private String password;
 
 	private String role;
 
+	@Column(name = "create_at")
 	private Date createAt;
     
+	@JsonIgnore
 	private Boolean isActive;
 	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
