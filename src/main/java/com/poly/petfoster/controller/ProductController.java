@@ -38,10 +38,10 @@ public class ProductController {
     }
     @PutMapping("{id}")
     public ResponseEntity<ApiResponse> updateProduct(@PathVariable("id") String id ,@RequestBody ProductRequest productRequest) {
-        return ResponseEntity.ok(productService.getProduct(id));
+        return ResponseEntity.ok(productService.updateProduct(id, productRequest));
     }
     @DeleteMapping("{id}")
-    public ResponseEntity<ApiResponse> DeleteProduct(@PathVariable("id") String id ,@RequestBody ProductRequest productRequest) {
-        return ResponseEntity.ok(productService.getProduct(id));
+    public ResponseEntity<ApiResponse> DeleteProduct(@PathVariable("id") String id ) {
+        return ResponseEntity.ok(productService.deleteProduct(id));
     }
 }

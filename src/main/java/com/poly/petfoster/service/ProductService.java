@@ -7,7 +7,11 @@ import com.poly.petfoster.response.ProductResponse;
 public interface ProductService {
     ApiResponse getProduct( String id);
     ApiResponse getAllProduct();
+    // ApiResponse getProductByType();
+    // ApiResponse getProductBySize();
+    // ApiResponse getProductByInterval();
+    // ApiResponse getProductByFilter();
     ApiResponse createProduct( ProductRequest createProductReq);
     ApiResponse updateProduct( String id, ProductRequest updateProductReq);
-    ApiResponse deleteProduct(String id, ProductRequest deleteProductReq);
+    ApiResponse deleteProduct(String id);
 }
