@@ -21,6 +21,7 @@ import com.poly.petfoster.constant.PatternExpression;
 import com.poly.petfoster.constant.RespMessage;
 import com.poly.petfoster.entity.User;
 import com.poly.petfoster.repository.UserRepository;
+import com.poly.petfoster.request.ChangePasswordRequest;
 import com.poly.petfoster.request.ProfileRepuest;
 import com.poly.petfoster.response.ApiResponse;
 import com.poly.petfoster.response.AuthResponse;
@@ -110,7 +111,7 @@ public class ProfileServiceImpl implements ProfileService {
     }
 
     @Override
-    public ApiResponse changePassUser(String token,String password ,String newPassword, String confirmPassword) {
+    public ApiResponse changePassUser(ChangePasswordRequest changePasswordRequest, String token) {
         Map<String, String> errorsMap = new HashMap<>();
         String username = jwtProvider.getUsernameFromToken(token);
 
@@ -129,11 +130,11 @@ public class ProfileServiceImpl implements ProfileService {
             errorsMap.put("username", "Invalid username!");
         }
 
-        if (!user.getPassword().equals(password)) {
+        if (passwordEncoder.matches(user.getPassword(), changePasswordRequest.getPassword())) {
             errorsMap.put("password", "Invalid password!");
         }
 
-        if (!newPassword.equals(confirmPassword)) {
+        if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmPassword())) {
             errorsMap.put("confirmPassword", "Invalid confirm password!");
         }
 
@@ -145,7 +146,7 @@ public class ProfileServiceImpl implements ProfileService {
                     .build();
         }
 
-        user.setPassword(passwordEncoder.encode(confirmPassword));
+        user.setPassword(passwordEncoder.encode(changePasswordRequest.getConfirmPassword()));
 
         return ApiResponse.builder()
                 .message("Change pass success!")

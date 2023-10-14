@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.poly.petfoster.request.ChangePasswordRequest;
 import com.poly.petfoster.request.ProfileRepuest;
 import com.poly.petfoster.response.ApiResponse;
 import com.poly.petfoster.service.ProfileService;
@@ -41,8 +42,8 @@ public class UserProfileController {
     }
 
     @PostMapping("/changePass")
-    public ResponseEntity<ApiResponse> changePass(@Valid @RequestHeader("Authorization") String jwt, String password, String newPassword, String confirmPassword) {
-        return ResponseEntity.ok(profileService.changePassUser(jwt, password, newPassword, confirmPassword));
+    public ResponseEntity<ApiResponse> changePass(@Valid @RequestHeader("Authorization") String jwt, @RequestBody ChangePasswordRequest changePasswordRequest) {
+        return ResponseEntity.ok(profileService.changePassUser(changePasswordRequest, jwt));
     }
 
 }
