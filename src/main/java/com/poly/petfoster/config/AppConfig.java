@@ -11,6 +11,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.security.config.Customizer;
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 public class AppConfig {
@@ -27,14 +29,21 @@ public class AppConfig {
         };
     }
 
+    
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-        .authorizeHttpRequests(Authorize -> Authorize.antMatchers("/api/auth/**").authenticated().anyRequest().permitAll())
-        .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class)
-        .csrf().disable()
-        .httpBasic().and().formLogin();
+
+        http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .cors(Customizer.withDefaults())
+                .authorizeHttpRequests(Authorize ->
+                        Authorize
+                                .antMatchers("/api/admin/**").hasRole("ADMIN")
+                                .antMatchers("/api/user/**").authenticated()
+                                .anyRequest().permitAll())
+                .addFilterBefore(new JwtValidator(), BasicAuthenticationFilter.class)
+                .csrf(csrf -> csrf.disable())
+                .httpBasic(withDefaults()).formLogin(withDefaults());
 
         return http.build();
     }

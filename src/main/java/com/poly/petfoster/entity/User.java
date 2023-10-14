@@ -7,22 +7,29 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity(name = "Users")
 public class User {
 
     @Id
+	@GeneratedValue(generator = "uuid")
+	@GenericGenerator(name = "uuid", strategy = "uuid2")
     @Column(name = "user_id")
     private String id;
 
@@ -42,12 +49,15 @@ public class User {
 
 	private String email;
 
+	@JsonIgnore
 	private String password;
 
 	private String role;
 
+	@Column(name = "create_at")
 	private Date createAt;
     
+	@JsonIgnore
 	private Boolean isActive;
 	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
