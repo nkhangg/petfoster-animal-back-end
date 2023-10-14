@@ -53,4 +53,9 @@ public interface ProductRepository extends JpaRepository<Product, String>{
         @Param("sort") String sort
         );
     
+    @Query(nativeQuery = true, 
+            value = "select top 10 * from product " + 
+            "where [type_id] = (select [type_id] from product where product_id = :id) and product_id != :id")
+    public List<Product> getSameTypeProducts(@Param("id") String id);
+        
 }
