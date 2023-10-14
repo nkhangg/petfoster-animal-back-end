@@ -1,6 +1,5 @@
 package com.poly.petfoster.service;
 
-
 import org.springframework.web.multipart.MultipartFile;
 
 import com.poly.petfoster.request.ProfileRepuest;
@@ -11,5 +10,7 @@ public interface ProfileService {
     ApiResponse getProfile(String jwt);
 
     ApiResponse updateProfile(ProfileRepuest profileRepuest, MultipartFile avartar, String token);
+
+    ApiResponse changePassUser(String jwt, String password, String newPassword, String confirmPassword);
 
 }

@@ -15,6 +15,6 @@ public interface UserService {
 
     public User findUserProfileByJwt(String jwt);
 
-    public ApiResponse changePassUser(String username, String password, String newPassword, String confirmPassword);
+    
 
 }

@@ -54,49 +54,6 @@ public class UserServiceImpl implements UserService {
         throw new UnsupportedOperationException("Unimplemented method 'findUserProfileByJwt'");
     }
 
-    @Override
-    public ApiResponse changePassUser(String username, String password, String newPassword, String confirmPassword) {
-        Map<String, String> errorsMap = new HashMap<>();
-        User user = userRepository.findByUsername(username).orElse(null);
-
-        if (user == null) {
-            return ApiResponse.builder()
-                    .message("User not found !")
-                    .status(HttpStatus.NOT_FOUND.value())
-                    .errors(true)
-                    .data(null)
-                    .build();
-        }
-
-        if (!user.getUsername().equals(username)) {
-            errorsMap.put("username", "Invalid username!");
-        }
-
-
-        if (!user.getPassword().equals(password)) {
-            errorsMap.put("password", "Invalid password!");
-        }
-
-        if(!newPassword.equals(confirmPassword)){
-            errorsMap.put("confirmPassword", "Invalid confirm password!");
-        }
-
-        if(!errorsMap.isEmpty()){
-            return ApiResponse.builder()
-                            .message("Change pass fail !")
-                            .errors(errorsMap)
-                            .data(null)
-                            .build();
-        }
-
-        user.setPassword(confirmPassword);
-
-        return ApiResponse.builder()
-                .message("Change pass success!")
-                .errors(false)
-                .data(userRepository.save(user))
-                .build();
-
-    }
+    
 
 }

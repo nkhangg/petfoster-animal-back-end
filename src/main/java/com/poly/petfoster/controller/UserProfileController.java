@@ -40,4 +40,9 @@ public class UserProfileController {
         return ResponseEntity.ok(profileService.updateProfile(profileRepuest, avatar, jwt));
     }
 
+    @PostMapping("/changePass")
+    public ResponseEntity<ApiResponse> changePass(@Valid @RequestHeader("Authorization") String jwt, String password, String newPassword, String confirmPassword) {
+        return ResponseEntity.ok(profileService.changePassUser(jwt, password, newPassword, confirmPassword));
+    }
+
 }
