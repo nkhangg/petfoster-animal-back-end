@@ -1,6 +1,8 @@
 package com.poly.petfoster.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +50,8 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
         }
 
         ProductItem productItem = takeActionServiceImpl.createProductTakeAction(product);
+        List<SizeAndPrice> sizeAndPrices = getSizeAndPrices(product);
+        Collections.sort(sizeAndPrices, Comparator.comparing(SizeAndPrice::getSize));
 
         return ApiResponse.builder()
                         .message("Successfully!!!")
@@ -63,7 +67,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
                                         .images(getImgNames(product))
                                         .rating(productItem.getRating())
                                         .desciption(product.getDesc())
-                                        .sizeAndPrice(getSizeAndPrices(product))
+                                        .sizeAndPrice(sizeAndPrices)
                                         .suggestions(getSuggestionProducts(id))
                                         .build()
                         )
