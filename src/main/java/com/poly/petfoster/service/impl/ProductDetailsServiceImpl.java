@@ -13,10 +13,14 @@ import org.springframework.stereotype.Service;
 import com.poly.petfoster.entity.Imgs;
 import com.poly.petfoster.entity.Product;
 import com.poly.petfoster.entity.ProductRepo;
+import com.poly.petfoster.entity.ProductType;
 import com.poly.petfoster.repository.ProductRepository;
+import com.poly.petfoster.repository.ProductTypeRepository;
 import com.poly.petfoster.response.ApiResponse;
+import com.poly.petfoster.response.product_details.Brand;
 import com.poly.petfoster.response.product_details.ProductDetail;
 import com.poly.petfoster.response.product_details.SizeAndPrice;
+import com.poly.petfoster.response.product_details.TypeAndBrandResponse;
 import com.poly.petfoster.response.takeaction.ProductItem;
 import com.poly.petfoster.service.ProductDetailsService;
 import com.poly.petfoster.ultils.PortUltil;
@@ -26,6 +30,9 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    ProductTypeRepository productTypeRepository;
 
     @Autowired
     TakeActionServiceImpl takeActionServiceImpl;
@@ -73,6 +80,44 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
                         )
                         .build();
     }
+
+
+    @Override
+    public ApiResponse getProductTypesAndBrands() {
+
+        List<ProductType> productTypes = productTypeRepository.findAll();
+        if(productTypes.isEmpty()) {
+            return ApiResponse.builder()
+                .message("No types data available")
+                .status(200)
+                .errors(false)
+                .build();
+        }
+
+        List<Brand> brands = new ArrayList<>();
+        for (String brand : productRepository.getProductBrands()) {
+            Brand b = Brand.builder().id(brand).name(brand).build();
+            brands.add(b);
+        }
+
+        if(brands.isEmpty()) {
+            return ApiResponse.builder()
+                    .message("No brands data available")
+                    .status(200)
+                    .errors(false)
+                    .build();
+        }
+
+        return ApiResponse.builder()
+                    .message("Successfully!!!")
+                    .status(200)
+                    .errors(false)
+                    .data(
+                        TypeAndBrandResponse.builder().types(productTypes).brands(brands).build()
+                    )
+                    .build();
+
+    }
     
 
     public List<String> getImgNames(Product product) {
@@ -103,6 +148,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
 
         return sizeAndprices;
     }
+
 
     public List<ProductItem> getSuggestionProducts(String id) {
 

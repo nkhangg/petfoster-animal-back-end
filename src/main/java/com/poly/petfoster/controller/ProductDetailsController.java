@@ -22,4 +22,9 @@ public class ProductDetailsController {
         return ResponseEntity.ok(productDetailsService.productDetails(id));
     }
 
+    @GetMapping("types-brands")
+    public ResponseEntity<ApiResponse> getProductTypesAndBrands() {
+        return ResponseEntity.ok(productDetailsService.getProductTypesAndBrands());
+    }
+
 }

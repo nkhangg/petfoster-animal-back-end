@@ -292,6 +292,27 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Get Types And Brands",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8019/api/product/types-brands",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8019",
+							"path": [
+								"api",
+								"product",
+								"types-brands"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
