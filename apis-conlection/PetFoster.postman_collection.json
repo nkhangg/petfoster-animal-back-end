@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "5ba5d887-6c05-4739-a78f-099de7c2fd73",
+		"_postman_id": "2a656025-93d1-4ddb-b01f-1300380b872b",
 		"name": "PetFoster",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21344732"
+		"_exporter_id": "29532805"
 	},
 	"item": [
 		{
@@ -270,6 +270,28 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Product Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8019/api/product/detail/PD0001",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8019",
+							"path": [
+								"api",
+								"product",
+								"detail",
+								"PD0001"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -332,7 +354,10 @@
 					"name": "[auth]Profile",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
