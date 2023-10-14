@@ -10,6 +10,6 @@ public interface ProfileService {
 
     ApiResponse getProfile(String jwt);
 
-    ApiResponse updateProfile(ProfileRepuest profileRepuest, MultipartFile avartar, String token);
+    ApiResponse updateProfile(ProfileRepuest profileRepuest, String token);
 
 }

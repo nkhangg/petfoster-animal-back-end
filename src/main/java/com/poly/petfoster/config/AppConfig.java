@@ -29,6 +29,8 @@ public class AppConfig {
         };
     }
 
+    
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
