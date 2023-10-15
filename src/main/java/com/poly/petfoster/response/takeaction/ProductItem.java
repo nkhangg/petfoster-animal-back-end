@@ -13,12 +13,12 @@ public class ProductItem {
 
     private String id;
     private String brand;
-    private Object size;
     private Integer discount;
     private String image;
     private String name;
+    private Integer rating;
+    private Object size;
     private Integer oldPrice;
     private Integer price;
-    private Integer rating;
    
 }
