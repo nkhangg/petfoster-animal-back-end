@@ -27,11 +27,11 @@ import lombok.NoArgsConstructor;
 @Entity(name = "Users")
 public class User {
 
-    @Id
+	@Id
 	@GeneratedValue(generator = "uuid")
 	@GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column(name = "user_id")
-    private String id;
+	@Column(name = "user_id")
+	private String id;
 
 	private String username;
 
@@ -49,14 +49,15 @@ public class User {
 
 	private String email;
 
+	@JsonIgnore
 	private String password;
 
 	private String role;
 
 	private Date createAt;
-    
+
 	private Boolean isActive;
-	
+
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private List<Adopt> adopts = new ArrayList<>();
