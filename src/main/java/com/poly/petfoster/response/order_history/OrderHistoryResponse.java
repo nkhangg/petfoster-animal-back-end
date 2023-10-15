@@ -13,4 +13,5 @@ import lombok.NoArgsConstructor;
 @Builder
 public class OrderHistoryResponse {
     private List<OrderHistory> data;
+    private Integer pages;
 }
