@@ -24,6 +24,8 @@ public class ChangePasswordRequest {
     @Length(min = 6, message = "must be longer than 6 characters!")
     String newPassword;
 
+    
+
     @NotBlank(message = RespMessage.NOT_EMPTY)
     @Length(min = 6, message = "must be longer than 6 characters!")
     String confirmPassword;
