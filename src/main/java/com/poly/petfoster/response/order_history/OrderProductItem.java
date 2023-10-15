@@ -1,4 +1,4 @@
-package com.poly.petfoster.response.takeaction;
+package com.poly.petfoster.response.order_history;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,19 +6,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class ProductItem {
+public class OrderProductItem {
 
     private String id;
     private String brand;
-    private Integer discount;
     private String image;
     private String name;
-    private Integer rating;
     private Object size;
-    private Integer oldPrice;
     private Integer price;
-   
+    private Integer quantity;
+    private Integer repo;
+
 }

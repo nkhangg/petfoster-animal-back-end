@@ -1,6 +1,8 @@
 package com.poly.petfoster.ultils;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.util.UUID;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
@@ -49,6 +51,11 @@ public class ImageUtils {
         }
 
         return outputStream.toByteArray();
+    }
+
+    public static File createFileImage () {
+        UUID uuid = UUID.randomUUID();
+        return new File("images\\" + uuid.toString() +".jpg");
     }
 
     

@@ -38,6 +38,6 @@ public class ProfileRepuest {
     @NotBlank(message = RespMessage.NOT_EMPTY)
     private String address;
 
-
+    private MultipartFile avartar;
     
 }

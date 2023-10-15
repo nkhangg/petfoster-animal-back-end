@@ -17,12 +17,14 @@ import org.hibernate.annotations.CreationTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Entity
 public class Product {
     
@@ -42,7 +44,6 @@ public class Product {
     private ProductType productType;
 
     private Boolean isActive;
-
 
     // brand of product
     private String brand;

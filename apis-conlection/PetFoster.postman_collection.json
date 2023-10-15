@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "5ba5d887-6c05-4739-a78f-099de7c2fd73",
+		"_postman_id": "2a656025-93d1-4ddb-b01f-1300380b872b",
 		"name": "PetFoster",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "21344732"
+		"_exporter_id": "29532805"
 	},
 	"item": [
 		{
@@ -26,7 +26,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"hantl1\",\r\n    \"password\": \"123456\"\r\n}\r\n\r\n                    \r\n",
+							"raw": "{\r\n    \"username\": \"duynq\",\r\n    \"password\": \"123456\"\r\n}\r\n\r\n                    \r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -55,7 +55,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"hantl1\",\r\n    \"password\": \"123456\",\r\n    \"confirmPassword\": \"123456\",\r\n    \"email\": \"ha1@gmail.com\",\r\n    \"gender\": \"false\",\r\n    \"fullname\": \"ha lam\"\r\n}",
+							"raw": "{\r\n    \"username\": \"duynq\",\r\n    \"password\": \"123456\",\r\n    \"confirmPassword\": \"123456\",\r\n    \"email\": \"duynq@gmail.com\",\r\n    \"gender\": \"true\",\r\n    \"fullname\": \"Nguyen Quoc Duy\"\r\n}\r\n\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -270,6 +270,49 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Product Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8019/api/product/detail/PD0001",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8019",
+							"path": [
+								"api",
+								"product",
+								"detail",
+								"PD0001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Types And Brands",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8019/api/product/types-brands",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8019",
+							"path": [
+								"api",
+								"product",
+								"types-brands"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -332,7 +375,10 @@
 					"name": "[auth]Profile",
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": {
+							"raw": ""
+						}
 					},
 					"response": []
 				},
@@ -416,6 +462,43 @@
 								"api",
 								"user",
 								"order"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "order",
+			"item": [
+				{
+					"name": "Order History",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTczODUwODMsImV4cCI6MTY5NzM4ODY4MywidXNlcm5hbWUiOiJkdXlucSIsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSIn0.tuCYBUg8bZun2H877ldLvuST-XfXDYjjt8_QG1VmgAaUaKe8vYLWt9p8l9wbLkGzftg2IkD409JDyPpd8_WZ4A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8019/api/user/order/history",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8019",
+							"path": [
+								"api",
+								"user",
+								"order",
+								"history"
 							]
 						}
 					},
