@@ -35,7 +35,6 @@ public class ProductFilterServiceImpl implements ProductFilterService {
         List<ProductItem> productItems = new ArrayList<>();
         List<Product> filterProducts =  productRepository.filterProducts(typeName.orElse(null), minPrice.orElse(null), maxPrice.orElse(null), stock.orElse(null), brand.orElse(null), productName.orElse(null), sort.orElse(null));
         Pageable pageable = PageRequest.of(page.orElse(0), 9);
-        // List<Product> filterProducts = new ArrayList<>();
 
         int startIndex = (int) pageable.getOffset();
         int endIndex = Math.min(startIndex + pageable.getPageSize(), filterProducts.size());

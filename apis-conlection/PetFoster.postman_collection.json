@@ -26,7 +26,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"duynq\",\r\n    \"password\": \"123456\"\r\n}\r\n\r\n                    \r\n",
+							"raw": "{\r\n    \"username\": \"hoangvl\",\r\n    \"password\": \"123456\"\r\n}\r\n\r\n                    \r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -435,7 +435,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTcwNDAwOTQsImV4cCI6MTY5NzA0MzY5NCwidXNlcm5hbWUiOiJraGFuZ3BuMSIsImF1dGhvcml0aWVzIjoiUk9MRV9BRE1JTiJ9.KQuyYQDTY5VTRY_b30guyBUlZCLF0c-mIhSIEGz-76N7F_Eir1-VbMX_FBW_HtWdhm3IGvnz5w2xPmw5fBQoLA",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTczOTMzNjMsImV4cCI6MTY5NzM5Njk2MywidXNlcm5hbWUiOiJkdXlucSIsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSIn0._xxWdaBXEKl_aDiWYS6wV1e5xYT4LyXN6RWUAXrO-hAElODz-zb1OE_4o3i2T6VX3onXfR553YHhstN3Q9XcBg",
 									"type": "string"
 								}
 							]
@@ -444,7 +444,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"fullname\": \"ha nguyen\",\r\n    \"address\": \"1\",\r\n    \"phone\": \"0123456789\",\r\n    \"shippingFee\": 1,\r\n    \"orderProducts\": [\r\n        {\r\n            \"productId\": \"PD0001\",\r\n            \"size\": 250,\r\n            \"quantity\": 2\r\n        },\r\n        {\r\n            \"productId\": \"PD0001\",\r\n            \"size\": 500,\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"productId\": \"PD0002\",\r\n            \"size\": 200,\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"fullname\": \"ha nguyen\",\r\n    \"address\": \"1\",\r\n    \"phone\": \"0123456789\",\r\n    \"shippingFee\": 1,\r\n    \"orderProducts\": [\r\n        {\r\n            \"productId\": \"PD0001\",\r\n            \"size\": 250,\r\n            \"quantity\": 2\r\n        },\r\n        {\r\n            \"productId\": \"PD0001\",\r\n            \"size\": 500,\r\n            \"quantity\": 1\r\n        },\r\n        {\r\n            \"productId\": \"PD0002\",\r\n            \"size\": 500,\r\n            \"quantity\": 1\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -480,7 +480,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTczODUwODMsImV4cCI6MTY5NzM4ODY4MywidXNlcm5hbWUiOiJkdXlucSIsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSIn0.tuCYBUg8bZun2H877ldLvuST-XfXDYjjt8_QG1VmgAaUaKe8vYLWt9p8l9wbLkGzftg2IkD409JDyPpd8_WZ4A",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTczOTY3NjksImV4cCI6MTY5NzQwMDM2OSwidXNlcm5hbWUiOiJob2FuZ3ZsIiwiYXV0aG9yaXRpZXMiOiJST0xFX1VTRVIifQ.xv6ANCJjuq5oMwUMawHHWKeCTUAAOHg-5YIY3BT4cZMS2ir3mRoTWEpqU186CFXfM22dlnOLAG9wGFO4jtn7sw",
 									"type": "string"
 								}
 							]
@@ -488,7 +488,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8019/api/user/order/history",
+							"raw": "http://localhost:8019/api/user/order/history/?page=0",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -498,7 +498,14 @@
 								"api",
 								"user",
 								"order",
-								"history"
+								"history",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								}
 							]
 						}
 					},

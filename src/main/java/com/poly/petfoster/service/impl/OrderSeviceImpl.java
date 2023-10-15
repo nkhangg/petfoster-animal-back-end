@@ -4,13 +4,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.poly.petfoster.config.JwtProvider;
 import com.poly.petfoster.constant.PatternExpression;
+import com.poly.petfoster.constant.RespMessage;
 import com.poly.petfoster.entity.OrderDetail;
 import com.poly.petfoster.entity.Orders;
 import com.poly.petfoster.entity.Product;
@@ -142,6 +148,7 @@ public class OrderSeviceImpl implements OrderService{
                         .data(orderDetails).build();
     }
 
+
     public ShippingInfo createShippingInfo(User user, OrderRequest orderRequest) {
 
         return ShippingInfo.builder()
@@ -152,6 +159,7 @@ public class OrderSeviceImpl implements OrderService{
                     .shipFee(orderRequest.getShippingFee()).build();
 
     }
+
     
     public OrderDetail createOrderDetail(Orders order, OrderProduct orderProduct) {
 
@@ -171,8 +179,9 @@ public class OrderSeviceImpl implements OrderService{
         return orderDetail;
     }
 
+
     @Override
-    public ApiResponse orderHistory(String jwt) {
+    public ApiResponse orderHistory(String jwt, Optional<Integer> page) {
 
         User user = userRepository.findByUsername(jwtProvider.getUsernameFromToken(jwt)).orElse(null);
 
@@ -213,12 +222,29 @@ public class OrderSeviceImpl implements OrderService{
                 data.add(orderHistory);
         }
 
+        Pageable pageable = PageRequest.of(page.orElse(0), 3);
+        int startIndex = (int) pageable.getOffset();
+        int endIndex = Math.min(startIndex + pageable.getPageSize(), data.size());
+
+        if(startIndex >= endIndex){
+            return ApiResponse.builder()
+            .message(RespMessage.NOT_FOUND.getValue())
+            .data(null)
+            .errors(true)
+            .status(HttpStatus.NOT_FOUND.value())
+            .build();
+        }
+
+        List<OrderHistory> visibleProducts = data.subList(startIndex, endIndex);
+        Page<OrderHistory> pagination = new PageImpl<OrderHistory>(visibleProducts, pageable, data.size());
+
         return ApiResponse.builder()
                 .message("Successfully")
                 .status(200).
                 errors(false).
-                data(OrderHistoryResponse.builder().data(data).build()).build();
+                data(OrderHistoryResponse.builder().data(pagination.getContent()).pages(pagination.getTotalPages()).build()).build();
     }
+
 
     public OrderProductItem createOrderProductItem(OrderDetail orderDetail){
         String image = "";
