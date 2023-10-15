@@ -6,8 +6,6 @@ import java.util.UUID;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
-import org.springframework.web.multipart.MultipartFile;
-
 public class ImageUtils {
 
 

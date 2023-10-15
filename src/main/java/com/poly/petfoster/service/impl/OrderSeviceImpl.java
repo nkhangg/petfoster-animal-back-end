@@ -26,14 +26,24 @@ import com.poly.petfoster.repository.UserRepository;
 import com.poly.petfoster.request.OrderProduct;
 import com.poly.petfoster.request.OrderRequest;
 import com.poly.petfoster.response.ApiResponse;
-import com.poly.petfoster.response.AuthResponse;
+import com.poly.petfoster.response.order_history.OrderHistory;
+import com.poly.petfoster.response.order_history.OrderHistoryResponse;
+import com.poly.petfoster.response.order_history.OrderProductItem;
 import com.poly.petfoster.service.OrderService;
+import com.poly.petfoster.ultils.FormatUtils;
+import com.poly.petfoster.ultils.PortUltil;
 
 @Service
 public class OrderSeviceImpl implements OrderService{
 
     @Autowired
     JwtProvider jwtProvider;
+
+    @Autowired
+    PortUltil portUltil;
+
+    @Autowired
+    FormatUtils formatUtils;
 
     @Autowired
     UserRepository userRepository;
@@ -52,6 +62,9 @@ public class OrderSeviceImpl implements OrderService{
 
     @Autowired
     ProductRepoRepository productRepoRepository;
+
+    @Autowired
+    TakeActionServiceImpl takeActionServiceImpl;
 
     @Override
     public ApiResponse createOrder(String jwt, OrderRequest orderRequest) {
@@ -156,6 +169,75 @@ public class OrderSeviceImpl implements OrderService{
             );
 
         return orderDetail;
+    }
+
+    @Override
+    public ApiResponse orderHistory(String jwt) {
+
+        User user = userRepository.findByUsername(jwtProvider.getUsernameFromToken(jwt)).orElse(null);
+
+        if(user == null) {
+            return ApiResponse.builder()
+                    .message("Invalid Token!!!")
+                    .status(400)
+                    .errors("Invalid token")
+                    .build();
+        }
+       
+        List<Orders> ordersHistory = ordersRepository.orderHistory(user.getId());
+
+        if(ordersHistory.isEmpty()) {
+            return ApiResponse.builder().message("No data available").status(200).errors(false).data(ordersHistory).build();
+        }
+
+        List<OrderHistory> data = new ArrayList<>();
+
+        for (Orders order : ordersHistory) {
+
+            List<OrderDetail> orderDetails = order.getOrderDetails();
+            List<OrderProductItem> products = new ArrayList<>();
+
+            for (OrderDetail orderDetail : orderDetails) {
+                products.add(createOrderProductItem(orderDetail));
+            }
+
+            OrderHistory orderHistory = OrderHistory.builder()
+                .id(order.getId())
+                .datePlace(formatUtils.dateToString(order.getCreateAt()))
+                .state(order.getStatus())
+                .stateMessage(order.getStatus())
+                .total(order.getTotal())
+                .products(products)
+                .build();
+            
+                data.add(orderHistory);
+        }
+
+        return ApiResponse.builder()
+                .message("Successfully")
+                .status(200).
+                errors(false).
+                data(OrderHistoryResponse.builder().data(data).build()).build();
+    }
+
+    public OrderProductItem createOrderProductItem(OrderDetail orderDetail){
+        String image = "";
+
+        if(!orderDetail.getProduct().getImgs().isEmpty()){
+            image = orderDetail.getProduct().getImgs().get(0).getNameImg();   
+        }
+
+        return OrderProductItem
+            .builder()
+            .id(orderDetail.getProduct().getId())
+            .size(orderDetail.getSize())
+            .image(portUltil.getUrlImage(image))
+            .name(orderDetail.getProduct().getName())
+            .brand(orderDetail.getProduct().getBrand())
+            .price(productRepoRepository.findProductRepoByIdAndSize(orderDetail.getProduct().getId(), orderDetail.getSize()).getOutPrice().intValue())
+            .quantity(orderDetail.getQuantity())
+            .repo(productRepoRepository.findProductRepoByIdAndSize(orderDetail.getProduct().getId(), orderDetail.getSize()).getId())
+            .build();
     }
 
 }

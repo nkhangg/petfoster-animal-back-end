@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -24,5 +25,10 @@ public class OrderController {
     @PostMapping("order")
     public ResponseEntity<ApiResponse> createOrder(@RequestHeader("Authorization") String jwt, @Valid @RequestBody OrderRequest orderRequest) {
         return ResponseEntity.ok(orderService.createOrder(jwt, orderRequest));
+    }
+
+    @GetMapping("order/history")
+    public ResponseEntity<ApiResponse> ordersHistory(@RequestHeader("Authorization") String jwt) {
+        return ResponseEntity.ok(orderService.orderHistory(jwt));
     }
 }

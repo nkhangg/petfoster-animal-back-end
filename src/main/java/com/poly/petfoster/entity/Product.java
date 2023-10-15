@@ -45,7 +45,6 @@ public class Product {
 
     private Boolean isActive;
 
-
     // brand of product
     private String brand;
 
