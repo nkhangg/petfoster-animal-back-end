@@ -6,4 +6,6 @@ public interface ProductDetailsService {
     
     public ApiResponse productDetails(String id);
 
+    public ApiResponse getProductTypesAndBrands();
+
 }
