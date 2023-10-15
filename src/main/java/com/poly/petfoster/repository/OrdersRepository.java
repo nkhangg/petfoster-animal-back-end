@@ -65,4 +65,9 @@ public interface OrdersRepository extends JpaRepository<Orders, Integer> {
     @Query(nativeQuery = true, value = "select convert(date, max(create_at)) from orders")
     public Date getMaxDate();
 
+    @Query(nativeQuery = true, value ="select * from orders o " +
+                        "inner join shipping_info si on si.id = o.shipping_info_id " +
+                        "where [user_id] = :userId")
+    public List<Orders> orderHistory(@Param("userId") String userId);
+
 }
