@@ -1,10 +1,14 @@
 package com.poly.petfoster.request;
 
+import java.util.Date;
+import java.util.Optional;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.poly.petfoster.constant.RespMessage;
@@ -33,11 +37,16 @@ public class ProfileRepuest {
     private Boolean gender;
 
     @NotBlank(message = RespMessage.NOT_EMPTY)
-    private String birthday;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Optional<Date> birthday;
 
     @NotBlank(message = RespMessage.NOT_EMPTY)
     private String address;
 
+    private String password;
+
+    private String newPassword;
+
     private MultipartFile avartar;
-    
+
 }
