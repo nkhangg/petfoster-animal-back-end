@@ -12,4 +12,6 @@ public interface AuthService {
     AuthResponse register(RegisterRequest registerReq);
     Authentication authenticate(String username, String password);
 
+    
+
 }

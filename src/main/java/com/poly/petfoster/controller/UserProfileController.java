@@ -1,4 +1,5 @@
 package com.poly.petfoster.controller;
+
 import javax.servlet.annotation.MultipartConfig;
 import javax.validation.Valid;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.poly.petfoster.request.ChangePasswordRequest;
 import com.poly.petfoster.request.ProfileRepuest;
 import com.poly.petfoster.response.ApiResponse;
 import com.poly.petfoster.service.ProfileService;
@@ -31,10 +33,20 @@ public class UserProfileController {
     ProfileService profileService;
 
     @GetMapping("/profile")
-    public ResponseEntity<ApiResponse> getProfile(@RequestHeader("Authorization") String jwt){
+    public ResponseEntity<ApiResponse> getProfile(@RequestHeader("Authorization") String jwt) {
         return ResponseEntity.ok(profileService.getProfile(jwt));
     }
 
+    @PostMapping("/update")
+    public ResponseEntity<ApiResponse> updateProfile(@Valid @RequestPart("user") ProfileRepuest profileRepuest,
+            @RequestHeader("Authorization") String jwt, MultipartFile avatar) {
+        return ResponseEntity.ok(profileService.updateProfile(profileRepuest, avatar, jwt));
+    }
+
+    @PostMapping("/changePass")
+    public ResponseEntity<ApiResponse> changePass(@Valid @RequestHeader("Authorization") String jwt, @RequestBody ChangePasswordRequest changePasswordRequest) {
+        return ResponseEntity.ok(profileService.changePassUser(changePasswordRequest, jwt));
+    }
     @PostMapping("/profile")
     public ResponseEntity<ApiResponse> updateProfile(@ModelAttribute("user") ProfileRepuest profileRepuest, @RequestHeader("Authorization") String jwt) {
         System.out.println(profileRepuest);
