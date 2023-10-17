@@ -1,5 +1,6 @@
 package com.poly.petfoster.service.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.poly.petfoster.constant.RespMessage;
 import com.poly.petfoster.entity.Imgs;
 import com.poly.petfoster.entity.Product;
 import com.poly.petfoster.entity.ProductRepo;
@@ -22,6 +25,8 @@ import com.poly.petfoster.request.product.ProductRequest;
 import com.poly.petfoster.response.ApiResponse;
 import com.poly.petfoster.response.ProductResponse;
 import com.poly.petfoster.service.ProductService;
+import com.poly.petfoster.ultils.PortUltil;
+import com.poly.petfoster.ultils.ImageUtils;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -33,6 +38,8 @@ public class ProductServiceImpl implements ProductService {
         private ProductRepoRepository productRepoRepository;
         @Autowired
         private ImgsRepository imgsRepository;
+        @Autowired
+        PortUltil portUltil;
 
         @Override
         public ApiResponse getAllProduct() {
@@ -69,6 +76,8 @@ public class ProductServiceImpl implements ProductService {
                                 .name(selectProduct.getName())
                                 .desc(selectProduct.getDesc())
                                 .productType(selectProduct.getProductType())
+                                .brand(selectProduct.getBrand())
+                                .createAt(selectProduct.getCreateAt())
                                 .isActive(selectProduct.getIsActive())
                                 .productsRepo(selectProduct.getProductsRepo())
                                 .imgs(selectProduct.getImgs())
@@ -83,7 +92,7 @@ public class ProductServiceImpl implements ProductService {
         };
 
         @Override
-        public ApiResponse createProduct(ProductRequest ProductReq) {
+        public ApiResponse createProduct(ProductRequest ProductReq, List<MultipartFile> listImgs) {
                 Map<String, String> errorsMap = new HashMap<>();
 
                 if (productRepository.existsById(ProductReq.getId())) {
@@ -96,7 +105,7 @@ public class ProductServiceImpl implements ProductService {
                                         .build();
 
                 }
-                // System.out.println(ProductReq.getProductType());
+                System.out.println(ProductReq);
                 // System.out.println(ProductReq.getProductsRepo());
                 // System.out.println(ProductReq.getImgs());
                 // ProductType newProductType = ProductType.builder()
@@ -110,6 +119,8 @@ public class ProductServiceImpl implements ProductService {
                                 .name(ProductReq.getName())
                                 .desc(ProductReq.getDesc())
                                 .isActive(ProductReq.getIsActive())
+                                .brand(ProductReq.getBrand())
+                                // .createAt(null)
                                 // .productType(ProductReq.getProductType())
                                 // .productsRepo(ProductReq.getProductsRepo())
                                 .build();
@@ -117,17 +128,39 @@ public class ProductServiceImpl implements ProductService {
 
                 newProduct.setProductType(ProductReq.getProductType());
 
+
                 for (ProductRepo e : ProductReq.getProductsRepo()) {
                         e.setProduct(newProduct);
                         productRepoRepository.save(e);
                 }
                 newProduct.setProductsRepo(ProductReq.getProductsRepo());
 
-                for (Imgs e : ProductReq.getImgs()) {
-                        e.setProduct(newProduct);
-                        imgsRepository.save(e);
+                List<Imgs> listImgsProduct = new ArrayList<>();
+                for (MultipartFile item : listImgs) {
+                        if (item.getSize() > 500000) {
+                                errorsMap.put("Imgs", "Image size is too large");
+                        } else {
+                                try {
+                                        File file = ImageUtils.createFileImage();
+                                        item.transferTo(new File(file.getAbsolutePath()));
+                                        Imgs img = new Imgs();
+                                        img.setNameImg(file.getName());
+                                        img.setProduct(newProduct);
+                                        listImgsProduct.add(img);
+                                } catch (Exception e) {
+                                        e.printStackTrace();
+                                        return ApiResponse.builder()
+                                                        .message(RespMessage.INTERNAL_SERVER_ERROR.getValue())
+                                                        .errors(true)
+                                                        .status(500)
+                                                        .data(null)
+                                                        .build();
+                                }
+                                // e.setProduct(newProduct);
+                                // imgsRepository.save(e);
+                        }
                 }
-                newProduct.setImgs(ProductReq.getImgs());
+                newProduct.setImgs(listImgsProduct);
 
                 productRepository.save(newProduct);
 
@@ -146,6 +179,8 @@ public class ProductServiceImpl implements ProductService {
                                 .name(selectProduct.getName())
                                 .desc(selectProduct.getDesc())
                                 .productType(selectProduct.getProductType())
+                                .brand(selectProduct.getBrand())
+                                .createAt(selectProduct.getCreateAt())
                                 .isActive(selectProduct.getIsActive())
                                 .productsRepo(selectProduct.getProductsRepo())
                                 .imgs(selectProduct.getImgs())
@@ -164,12 +199,15 @@ public class ProductServiceImpl implements ProductService {
                 Map<String, String> errorsMap = new HashMap<>();
 
                 if (productRepository.existsById(ProductReq.getId())) {
+                        Product selectProduct2 = productRepository.findById(id).orElse(null);
 
                         Product updateProduct = Product.builder()
                                         .id(id)
                                         .name(ProductReq.getName())
                                         .desc(ProductReq.getDesc())
                                         .isActive(ProductReq.getIsActive())
+                                        .brand(ProductReq.getBrand())
+                                        .createAt(selectProduct2.getCreateAt())
                                         // .productType(ProductReq.getProductType())
                                         // .productsRepo(ProductReq.getProductsRepo())
                                         .build();
@@ -181,12 +219,33 @@ public class ProductServiceImpl implements ProductService {
                                 productRepoRepository.save(e);
                         }
                         updateProduct.setProductsRepo(ProductReq.getProductsRepo());
-
-                        for (Imgs e : ProductReq.getImgs()) {
-                                e.setProduct(updateProduct);
-                                imgsRepository.save(e);
-                        }
-                        updateProduct.setImgs(ProductReq.getImgs());
+                        //
+                        List<Imgs> listImgs = new ArrayList<>();
+                        
+                        // for (MultipartFile item : ProductReq.getImgs()) {
+                        //         if (item.getSize() > 500000) {
+                        //                 errorsMap.put("Imgs", "Image size is too large");
+                        //         } else {
+                        //                 try {
+                        //                         File file = ImageUtils.createFileImage();
+                        //                         item.transferTo(new File(file.getAbsolutePath()));
+                        //                         Imgs img = new Imgs();
+                        //                         img.setNameImg(file.getName());
+                        //                         img.setProduct(updateProduct);
+                        //                         listImgs.add(img);
+                        //                 } catch (Exception e) {
+                        //                         e.printStackTrace();
+                        //                         return ApiResponse.builder()
+                        //                                         .message(RespMessage.INTERNAL_SERVER_ERROR.getValue())
+                        //                                         .errors(true)
+                        //                                         .status(500)
+                        //                                         .data(null)
+                        //                                         .build();
+                        //                 }
+                        //                 // e.setProduct(newProduct);
+                        //                 // imgsRepository.save(e);
+                        //         }
+                        // }
 
                         productRepository.save(updateProduct);
 
@@ -215,6 +274,8 @@ public class ProductServiceImpl implements ProductService {
                                 .name(selectProduct.getName())
                                 .desc(selectProduct.getDesc())
                                 .productType(selectProduct.getProductType())
+                                .brand(selectProduct.getBrand())
+                                .createAt(selectProduct.getCreateAt())
                                 .isActive(selectProduct.getIsActive())
                                 .productsRepo(selectProduct.getProductsRepo())
                                 .imgs(selectProduct.getImgs())
@@ -232,16 +293,17 @@ public class ProductServiceImpl implements ProductService {
         public ApiResponse deleteProduct(String id) {
                 Map<String, String> errorsMap = new HashMap<>();
 
-
                 if (productRepository.existsById(id)) {
-                Product selectProduct1 = productRepository.findById(id).orElse(null);
+                        Product selectProduct1 = productRepository.findById(id).orElse(null);
 
-                       Product updateProduct = Product.builder()
+                        Product updateProduct = Product.builder()
                                         .id(id)
                                         .name(selectProduct1.getName())
                                         .desc(selectProduct1.getDesc())
                                         .isActive(false)
+                                        .brand(selectProduct1.getBrand())
                                         .productType(selectProduct1.getProductType())
+                                        .createAt(selectProduct1.getCreateAt())
                                         // .productsRepo(ProductReq.getProductsRepo())
                                         .build();
                         productRepository.save(updateProduct);
@@ -272,6 +334,8 @@ public class ProductServiceImpl implements ProductService {
                                 .name(selectProduct.getName())
                                 .desc(selectProduct.getDesc())
                                 .productType(selectProduct.getProductType())
+                                .brand(selectProduct.getBrand())
+                                .createAt(selectProduct.getCreateAt())
                                 .isActive(selectProduct.getIsActive())
                                 .productsRepo(selectProduct.getProductsRepo())
                                 .imgs(selectProduct.getImgs())
@@ -282,6 +346,6 @@ public class ProductServiceImpl implements ProductService {
                                 .status(HttpStatus.OK.value())
                                 .errors(null)
                                 .data(data)
-                                .build();        
+                                .build();
         };
 }
