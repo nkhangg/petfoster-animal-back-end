@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import com.poly.petfoster.config.JwtProvider;
 import com.poly.petfoster.constant.RespMessage;
+import com.poly.petfoster.entity.Product;
 import com.poly.petfoster.entity.User;
 import com.poly.petfoster.random.RandomPassword;
 import com.poly.petfoster.repository.UserRepository;
@@ -33,6 +34,7 @@ import com.poly.petfoster.request.UpdateUserRequest;
 import com.poly.petfoster.response.ApiResponse;
 import com.poly.petfoster.response.common.PagiantionResponse;
 import com.poly.petfoster.response.order_history.OrderHistory;
+import com.poly.petfoster.response.product_manage.ProductManageResponse;
 import com.poly.petfoster.service.UserService;
 import com.poly.petfoster.ultils.ImageUtils;
 import com.poly.petfoster.ultils.MailUtils;
@@ -111,18 +113,39 @@ public class UserServiceImpl implements UserService {
     @Override
     public ApiResponse getAllUser(String jwt, Optional<Integer> pages) {
 
+        // Pageable pageable = PageRequest.of(pages.orElse(0), 10);
+
+        // List<User> data = userRepository.findAll();
+
+        List<User> users = userRepository.findAll();
+
         Pageable pageable = PageRequest.of(pages.orElse(0), 10);
+        int startIndex = (int) pageable.getOffset();
+        int endIndex = Math.min(startIndex + pageable.getPageSize(), users.size());
 
-        Page<User> data = userRepository.findAll(pageable);
+        if (startIndex >= endIndex) {
+            return ApiResponse.builder()
+                    .message(RespMessage.NOT_FOUND.getValue())
+                    .data(null)
+                    .errors(true)
+                    .status(HttpStatus.NOT_FOUND.value())
+                    .build();
+        }
 
-        data.getContent().stream().forEach(item -> {
-            item.setAvatar(portUltil.getUrlImage(item.getAvatar()));
+        List<User> visibleUsers = users.subList(startIndex, endIndex);
+
+        visibleUsers.stream().forEach(user -> {
+            user.setAvatar(portUltil.getUrlImage(user.getAvatar()));
         });
+
+        Page<User> pagination = new PageImpl<User>(visibleUsers, pageable,
+                users.size());
 
         return ApiResponse.builder().message("Successfully!")
                 .status(200)
                 .errors(false)
-                .data(PagiantionResponse.builder().data(data.getContent()).pages(data.getTotalPages()).build())
+                .data(PagiantionResponse.builder().data(pagination.getContent()).pages(pagination.getTotalPages())
+                        .build())
                 .build();
     }
 
@@ -238,13 +261,11 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setIsActive(false);
-        User newUser = userRepository.save(user);
-
         return ApiResponse.builder()
                 .message("Delete success!")
                 .errors(false)
                 .status(HttpStatus.OK.value())
-                .data(newUser)
+                .data(userRepository.save(user))
                 .build();
     }
 
