@@ -4,7 +4,6 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import com.poly.petfoster.constant.RespMessage;
-import com.poly.petfoster.entity.Product;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

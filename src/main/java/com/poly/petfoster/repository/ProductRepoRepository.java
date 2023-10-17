@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.poly.petfoster.entity.Product;
-import com.poly.petfoster.entity.ProductRepo;
 import java.util.List;
 
 
