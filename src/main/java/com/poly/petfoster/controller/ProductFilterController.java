@@ -18,19 +18,19 @@ public class ProductFilterController {
 
     @Autowired
     ProductFilterService productFilterService;
-    
+
     @GetMapping()
     public ResponseEntity<ApiResponse> filterProducts(
-        @RequestParam("typeName") Optional<String> typeName,
-        @RequestParam("minPrice") Optional<Double> minPrice,
-        @RequestParam("maxPrice") Optional<Double> maxPrice,
-        @RequestParam("stock") Optional<Boolean> stock,
-        @RequestParam("brand") Optional<String> brand,
-        @RequestParam("productName") Optional<String> productName,
-        @RequestParam("sort") Optional<String> sort,
-        @RequestParam("page") Optional<Integer> page
-        ) {
-        return ResponseEntity.ok(productFilterService.filterProducts(typeName, minPrice, maxPrice, stock, brand, productName, sort, page));
+            @RequestParam("typeName") Optional<String> typeName,
+            @RequestParam("minPrice") Optional<Double> minPrice,
+            @RequestParam("maxPrice") Optional<Double> maxPrice,
+            @RequestParam("stock") Optional<Boolean> stock,
+            @RequestParam("brand") Optional<String> brand,
+            @RequestParam("productName") Optional<String> productName,
+            @RequestParam("sort") Optional<String> sort,
+            @RequestParam("page") Optional<Integer> page) {
+        return ResponseEntity.ok(productFilterService.filterProducts(typeName, minPrice, maxPrice, stock, brand,
+                productName, sort, page));
     }
 
 }
