@@ -1,9 +1,21 @@
 package com.poly.petfoster.service.impl;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,13 +23,20 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.poly.petfoster.config.JwtProvider;
+import com.poly.petfoster.constant.RespMessage;
 import com.poly.petfoster.entity.User;
 import com.poly.petfoster.random.RandomPassword;
 import com.poly.petfoster.repository.UserRepository;
 import com.poly.petfoster.request.ResetPasswordRequest;
+import com.poly.petfoster.request.UpdateUserRequest;
 import com.poly.petfoster.response.ApiResponse;
+import com.poly.petfoster.response.admin.user.AllUserResponse;
+import com.poly.petfoster.response.order_history.OrderHistory;
 import com.poly.petfoster.service.UserService;
+import com.poly.petfoster.ultils.ImageUtils;
 import com.poly.petfoster.ultils.MailUtils;
+import com.poly.petfoster.ultils.PortUltil;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,6 +52,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     MailUtils mailUtils;
+
+    @Autowired
+    JwtProvider jwtProvider;
+
+    @Autowired
+    PortUltil portUltil;
 
     @Override
     public User findById(String userId) {
@@ -81,6 +106,139 @@ public class UserServiceImpl implements UserService {
     public ApiResponse findByEmail(String email) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findByEmail'");
+    }
+
+    @Override
+    public ApiResponse getAllUser(String jwt, Optional<Integer> pages) {
+        // String username = jwtProvider.getUsernameFromToken(jwt);
+
+        // User user = userRepository.findByUsername(username).orElse(null);
+
+        // user.setAvatar(portUltil.getUrlImage(user.getAvatar()));
+
+        Pageable pageable = PageRequest.of(pages.orElse(0), 10);
+
+        Page<User> data = userRepository.findAll(pageable);
+
+        // int startIndex = (int) pageable.getOffset();
+        // int endIndex = Math.min(startIndex + pageable.getPageSize(), data.size());
+
+        // if (startIndex >= endIndex) {
+        // return ApiResponse.builder()
+        // .message(RespMessage.NOT_FOUND.getValue())
+        // .data(null)
+        // .errors(true)
+        // .status(HttpStatus.NOT_FOUND.value())
+        // .build();
+        // }
+
+        // List<OrderHistory> visibleProducts = data.subList(startIndex, endIndex);
+        // Page<OrderHistory> pagination = new PageImpl<OrderHistory>(visibleProducts,
+        // pageable, data.size());
+
+        return ApiResponse.builder().message("Successfully!")
+                .status(200)
+                .errors(false)
+                .data(AllUserResponse.builder().users(data.getContent()).pages(data.getTotalPages()).build())
+                .build();
+    }
+
+    @Override
+    public ApiResponse updateUser(@Valid UpdateUserRequest updateUserRequest) {
+        Map<String, String> errorsMap = new HashMap<>();
+        
+        User user = userRepository.findById(updateUserRequest.getId()).orElse(null);
+
+        if (user == null) {
+            return ApiResponse.builder()
+                    .message("User not found !")
+                    .status(HttpStatus.NOT_FOUND.value())
+                    .errors(true)
+                    .data(null)
+                    .build();
+        }
+
+        // start validate
+
+        if (!user.getEmail().equals(updateUserRequest.getEmail())) {
+            errorsMap.put("email", "Can't update email !");
+        }
+
+        if (updateUserRequest.getFullname().isEmpty()) {
+            errorsMap.put("fullname", "Fullname can't be blank");
+        }
+
+        if (updateUserRequest.getAddress().isEmpty()) {
+            errorsMap.put("address", "Address can't be blank");
+        }
+
+        if (updateUserRequest.getEmail().isEmpty()) {
+            errorsMap.put("email", "Email can't be blank");
+        }
+
+        if (updateUserRequest.getPhone().isEmpty()) {
+            errorsMap.put("phone", "Phone can't be blank");
+        }
+
+        if (updateUserRequest.getBirthday().orElse(null) == null) {
+            errorsMap.put("birthday", "Birthday can't be blank");
+        } else {
+            user.setBirthday(updateUserRequest.getBirthday().orElse(null));
+        }
+
+        if (updateUserRequest.getAvatar() != null) {
+            if (updateUserRequest.getAvatar().getSize() > 500000) {
+                errorsMap.put("avartar", "Image size is too large");
+            } else {
+                try {
+                    File file = ImageUtils.createFileImage();
+
+                    updateUserRequest.getAvatar().transferTo(new File(file.getAbsolutePath()));
+                    user.setAvatar(file.getName());
+                } catch (Exception e) {
+                    System.out.println("Erorr in update avatar in Profile service impl");
+                    e.printStackTrace();
+                    return ApiResponse.builder()
+                            .message(RespMessage.INTERNAL_SERVER_ERROR.getValue())
+                            .errors(true)
+                            .status(500)
+                            .data(null)
+                            .build();
+                }
+            }
+        }
+
+        //check errors
+
+        if (!errorsMap.isEmpty()) {
+            return ApiResponse.builder()
+                    .message("Update fail !")
+                    .errors(errorsMap)
+                    .data(null)
+                    .build();
+        }
+
+        // end validate
+        
+        user.setFullname(updateUserRequest.getFullname());
+        user.setGender(updateUserRequest.getGender());
+        user.setRole(updateUserRequest.getRole());
+        // user.setBirthday(updateUserRequest.getBirthday().orElse(null));
+        user.setPhone(updateUserRequest.getPhone());
+        user.setAddress(updateUserRequest.getAddress());
+        user.setEmail(updateUserRequest.getEmail());
+
+        User newUser = userRepository.save(user);
+
+        newUser.setAvatar(portUltil.getUrlImage(user.getAvatar()));
+
+        return ApiResponse.builder()
+                .message("Update success!")
+                .errors(false)
+                .status(HttpStatus.OK.value())
+                .data(newUser)
+                .build();
+
     }
 
 }
