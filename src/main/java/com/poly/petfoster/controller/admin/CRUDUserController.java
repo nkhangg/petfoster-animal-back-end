@@ -39,8 +39,13 @@ public class CRUDUserController {
         return ResponseEntity.ok(userService.getAllUser(jwt, pages));
     }
 
-    @PostMapping("/users")
+    @PostMapping("/users/update")
     public ResponseEntity<ApiResponse> updateUser(@RequestBody UpdateUserRequest updateUserRequest) {
         return ResponseEntity.ok(userService.updateUser(updateUserRequest));
+    }
+
+    @PostMapping("/users/delete")
+    public ResponseEntity<ApiResponse> deleteUser(@RequestBody UpdateUserRequest updateUserRequest) {
+        return ResponseEntity.ok(userService.deleteUser(updateUserRequest));
     }
 }

@@ -146,7 +146,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ApiResponse updateUser(@Valid UpdateUserRequest updateUserRequest) {
         Map<String, String> errorsMap = new HashMap<>();
-        
+
         User user = userRepository.findById(updateUserRequest.getId()).orElse(null);
 
         if (user == null) {
@@ -208,7 +208,7 @@ public class UserServiceImpl implements UserService {
             }
         }
 
-        //check errors
+        // check errors
 
         if (!errorsMap.isEmpty()) {
             return ApiResponse.builder()
@@ -219,7 +219,7 @@ public class UserServiceImpl implements UserService {
         }
 
         // end validate
-        
+
         user.setFullname(updateUserRequest.getFullname());
         user.setGender(updateUserRequest.getGender());
         user.setRole(updateUserRequest.getRole());
@@ -239,6 +239,30 @@ public class UserServiceImpl implements UserService {
                 .data(newUser)
                 .build();
 
+    }
+
+    @Override
+    public ApiResponse deleteUser(UpdateUserRequest updateUserRequest) {
+        User user = userRepository.findById(updateUserRequest.getId()).orElse(null);
+
+        if (user == null) {
+            return ApiResponse.builder()
+                    .message("User not found !")
+                    .status(HttpStatus.NOT_FOUND.value())
+                    .errors(true)
+                    .data(null)
+                    .build();
+        }
+
+        user.setIsActive(false);
+        User newUser = userRepository.save(user);
+
+        return ApiResponse.builder()
+                .message("Update success!")
+                .errors(false)
+                .status(HttpStatus.OK.value())
+                .data(newUser)
+                .build();
     }
 
 }
