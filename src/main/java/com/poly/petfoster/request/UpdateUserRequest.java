@@ -27,40 +27,38 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UpdateUserRequest {
 
-    User user;
-    
-    // @NotBlank(message = RespMessage.NOT_EMPTY)
-    // private String id;
+    @NotBlank(message = RespMessage.NOT_EMPTY)
+    private String id;
 
-    // @NotBlank(message = RespMessage.NOT_EMPTY)
-	// private String username;
+    @NotBlank(message = RespMessage.NOT_EMPTY)
+	private String username;
 
-    // @NotBlank(message = RespMessage.NOT_EMPTY)
-	// private String fullname;
+    @NotBlank(message = RespMessage.NOT_EMPTY)
+	private String fullname;
 
-    // @NotBlank(message = RespMessage.NOT_EMPTY)
-    // @DateTimeFormat(pattern = "yyyy-MM-dd")
-	// private Optional<Date> birthday;
+    @NotBlank(message = RespMessage.NOT_EMPTY)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Optional<Date> birthday;
 
-    // @NotNull(message = RespMessage.NOT_EMPTY)
-	// private Boolean gender;
+    @NotNull(message = RespMessage.NOT_EMPTY)
+	private Boolean gender;
 
-    // @NotBlank(message = RespMessage.NOT_EMPTY)
-	// private String phone;
+    @NotBlank(message = RespMessage.NOT_EMPTY)
+	private String phone;
 
-    // @NotBlank(message = RespMessage.NOT_EMPTY)
-	// private String address;
+    @NotBlank(message = RespMessage.NOT_EMPTY)
+	private String address;
 
-	// private MultipartFile avatar;
+	private MultipartFile avatar;
 
-    // @NotEmpty(message = RespMessage.NOT_EMPTY)
-    // @Email(message = "is invalid")
-	// private String email;
+    @NotEmpty(message = RespMessage.NOT_EMPTY)
+    @Email(message = "is invalid")
+	private String email;
 
-    // @NotBlank(message = RespMessage.NOT_EMPTY)
-	// private String role;
+    @NotBlank(message = RespMessage.NOT_EMPTY)
+	private String role;
 
-    // @NotBlank(message = RespMessage.NOT_EMPTY)
-	// private Date createAt;
+    @NotBlank(message = RespMessage.NOT_EMPTY)
+	private Date createAt;
 
 }

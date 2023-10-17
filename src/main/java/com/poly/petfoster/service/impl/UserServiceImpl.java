@@ -145,87 +145,92 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ApiResponse updateUser(@Valid UpdateUserRequest updateUserRequest) {
-        // Map<String, String> errorsMap = new HashMap<>();
+        Map<String, String> errorsMap = new HashMap<>();
         
-        // User user = userRepository.findById(updateUserRequest.).orElse(null);
+        User user = userRepository.findById(updateUserRequest.getId()).orElse(null);
 
-        // if (user == null) {
-        //     return ApiResponse.builder()
-        //             .message("User not found !")
-        //             .status(HttpStatus.NOT_FOUND.value())
-        //             .errors(true)
-        //             .data(null)
-        //             .build();
-        // }
+        if (user == null) {
+            return ApiResponse.builder()
+                    .message("User not found !")
+                    .status(HttpStatus.NOT_FOUND.value())
+                    .errors(true)
+                    .data(null)
+                    .build();
+        }
 
         // start validate
 
-        // if (!user.getEmail().equals(updateUserRequest.getEmail())) {
-        //     errorsMap.put("email", "Can't update email !");
-        // }
+        if (!user.getEmail().equals(updateUserRequest.getEmail())) {
+            errorsMap.put("email", "Can't update email !");
+        }
 
-        // if (updateUserRequest.getFullname().isEmpty()) {
-        //     errorsMap.put("fullname", "Fullname can't be blank");
-        // }
+        if (updateUserRequest.getFullname().isEmpty()) {
+            errorsMap.put("fullname", "Fullname can't be blank");
+        }
 
-        // if (updateUserRequest.getAddress().isEmpty()) {
-        //     errorsMap.put("address", "Address can't be blank");
-        // }
+        if (updateUserRequest.getAddress().isEmpty()) {
+            errorsMap.put("address", "Address can't be blank");
+        }
 
-        // if (updateUserRequest.getEmail().isEmpty()) {
-        //     errorsMap.put("email", "Email can't be blank");
-        // }
+        if (updateUserRequest.getEmail().isEmpty()) {
+            errorsMap.put("email", "Email can't be blank");
+        }
 
-        // if (updateUserRequest.getPhone().isEmpty()) {
-        //     errorsMap.put("phone", "Phone can't be blank");
-        // }
+        if (updateUserRequest.getPhone().isEmpty()) {
+            errorsMap.put("phone", "Phone can't be blank");
+        }
 
-        // if (updateUserRequest.getBirthday().orElse(null) == null) {
-        //     errorsMap.put("birthday", "Birthday can't be blank");
-        // } else {
-        //     user.setBirthday(updateUserRequest.getBirthday().orElse(null));
-        // }
+        if (updateUserRequest.getBirthday().orElse(null) == null) {
+            errorsMap.put("birthday", "Birthday can't be blank");
+        } else {
+            user.setBirthday(updateUserRequest.getBirthday().orElse(null));
+        }
 
-        // if (updateUserRequest.getAvatar() != null) {
-        //     if (updateUserRequest.getAvatar().getSize() > 500000) {
-        //         errorsMap.put("avartar", "Image size is too large");
-        //     } else {
-        //         try {
-        //             File file = ImageUtils.createFileImage();
+        if (updateUserRequest.getAvatar() != null) {
+            if (updateUserRequest.getAvatar().getSize() > 500000) {
+                errorsMap.put("avartar", "Image size is too large");
+            } else {
+                try {
+                    File file = ImageUtils.createFileImage();
 
-        //             updateUserRequest.getAvatar().transferTo(new File(file.getAbsolutePath()));
-        //             user.setAvatar(file.getName());
-        //         } catch (Exception e) {
-        //             System.out.println("Erorr in update avatar in Profile service impl");
-        //             e.printStackTrace();
-        //             return ApiResponse.builder()
-        //                     .message(RespMessage.INTERNAL_SERVER_ERROR.getValue())
-        //                     .errors(true)
-        //                     .status(500)
-        //                     .data(null)
-        //                     .build();
-        //         }
-        //     }
-        // }
+                    updateUserRequest.getAvatar().transferTo(new File(file.getAbsolutePath()));
+                    user.setAvatar(file.getName());
+                } catch (Exception e) {
+                    System.out.println("Erorr in update avatar in Profile service impl");
+                    e.printStackTrace();
+                    return ApiResponse.builder()
+                            .message(RespMessage.INTERNAL_SERVER_ERROR.getValue())
+                            .errors(true)
+                            .status(500)
+                            .data(null)
+                            .build();
+                }
+            }
+        }
 
-        // check errors
-        // if (!errorsMap.isEmpty()) {
-        //     return ApiResponse.builder()
-        //             .message("Update fail !")
-        //             .errors(errorsMap)
-        //             .data(null)
-        //             .build();
-        // }
+        //check errors
+
+        if (!errorsMap.isEmpty()) {
+            return ApiResponse.builder()
+                    .message("Update fail !")
+                    .errors(errorsMap)
+                    .data(null)
+                    .build();
+        }
 
         // end validate
-        // user.setUsername(updateUserRequest.getUsername());
-        // user.setGender(updateUserRequest.getGender());
-        // user.setRole(updateUserRequest.getRole());
-        // user.setCreateAt(updateUserRequest.getCreateAt());
+        
+        user.setFullname(updateUserRequest.getFullname());
+        user.setGender(updateUserRequest.getGender());
+        user.setRole(updateUserRequest.getRole());
+        // user.setBirthday(updateUserRequest.getBirthday().orElse(null));
+        user.setPhone(updateUserRequest.getPhone());
+        user.setAddress(updateUserRequest.getAddress());
+        user.setEmail(updateUserRequest.getEmail());
 
-        User newUser = userRepository.save(updateUserRequest.getUser());
+        User newUser = userRepository.save(user);
 
-        // newUser.setAvatar(portUltil.getUrlImage(user.getAvatar()));
+        newUser.setAvatar(portUltil.getUrlImage(user.getAvatar()));
 
         return ApiResponse.builder()
                 .message("Update success!")
