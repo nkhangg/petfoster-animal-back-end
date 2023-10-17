@@ -1,5 +1,6 @@
 package com.poly.petfoster.service.impl;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,18 +53,18 @@ public class AuthServiceImpl implements AuthService {
         } catch (Exception e) {
             errorsMap.put("username", "user not found!");
             return AuthResponse.builder()
-                .message(HttpStatus.NOT_FOUND.toString())
-                .errors(errorsMap)
-                .build();
+                    .message(HttpStatus.NOT_FOUND.toString())
+                    .errors(errorsMap)
+                    .build();
         }
-        
-        if(!passwordEncoder.matches(loginReq.getPassword(), userDetails.getPassword())) {
+
+        if (!passwordEncoder.matches(loginReq.getPassword(), userDetails.getPassword())) {
             errorsMap.put("username", "username is incorrect, please try again!");
             errorsMap.put("password", "password is incorrect, please try again!!");
             return AuthResponse.builder()
-                .message(HttpStatus.BAD_REQUEST.toString())
-                .errors(errorsMap)
-                .build();
+                    .message(HttpStatus.BAD_REQUEST.toString())
+                    .errors(errorsMap)
+                    .build();
         }
 
         Authentication authentication = authenticate(username, password);
@@ -73,73 +74,74 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtProvider.generateToken(authentication);
 
         return AuthResponse.builder()
-            .message("Login success")
-            .token(token)
-            .build();
+                .message("Login success")
+                .token(token)
+                .build();
     }
 
     @Override
     public AuthResponse register(RegisterRequest registerReq) {
-        
+
         Map<String, String> errorsMap = new HashMap<>();
 
-        if(PatternExpression.NOT_SPECIAL.matcher(registerReq.getUsername()).find()) {
+        if (PatternExpression.NOT_SPECIAL.matcher(registerReq.getUsername()).find()) {
             errorsMap.put("username", "username must not contains special characters!");
             return AuthResponse.builder()
-                .message(HttpStatus.BAD_REQUEST.toString())
-                .errors(errorsMap)
-                .build();
+                    .message(HttpStatus.BAD_REQUEST.toString())
+                    .errors(errorsMap)
+                    .build();
         }
 
-        if(userRepository.existsByUsername(registerReq.getUsername())) {
+        if (userRepository.existsByUsername(registerReq.getUsername())) {
             errorsMap.put("username", RespMessage.EXISTS);
             return AuthResponse.builder()
-                .message(HttpStatus.CONFLICT.toString())
-                .errors(errorsMap)
-                .build();
+                    .message(HttpStatus.CONFLICT.toString())
+                    .errors(errorsMap)
+                    .build();
         }
 
-        if(userRepository.existsByEmail(registerReq.getEmail())) {
+        if (userRepository.existsByEmail(registerReq.getEmail())) {
             errorsMap.put("email", RespMessage.EXISTS);
             return AuthResponse.builder()
-                .message(HttpStatus.CONFLICT.toString())
-                .errors(errorsMap)
-                .build();
+                    .message(HttpStatus.CONFLICT.toString())
+                    .errors(errorsMap)
+                    .build();
         }
 
-        if(!registerReq.getPassword().equals(registerReq.getConfirmPassword())) {
+        if (!registerReq.getPassword().equals(registerReq.getConfirmPassword())) {
             errorsMap.put("password confirm", "is incorrect");
             return AuthResponse.builder()
-                .message(HttpStatus.CONFLICT.toString())
-                .errors(errorsMap)
-                .build();
+                    .message(HttpStatus.CONFLICT.toString())
+                    .errors(errorsMap)
+                    .build();
         }
 
         User newUser = User.builder()
-                        .username(registerReq.getUsername())
-                        .email(registerReq.getEmail())
-                        .password(passwordEncoder.encode(registerReq.getPassword()))
-                        .gender(registerReq.getGender())
-                        .fullname(registerReq.getFullname())
-                        .isActive(true)
-                        .role("ROLE_USER")
-                        .build();
+                .username(registerReq.getUsername())
+                .email(registerReq.getEmail())
+                .password(passwordEncoder.encode(registerReq.getPassword()))
+                .gender(registerReq.getGender())
+                .fullname(registerReq.getFullname())
+                .createAt(new Date())
+                .isActive(true)
+                .role("ROLE_USER")
+                .build();
 
         userRepository.save(newUser);
 
         return AuthResponse.builder()
-            .message("Register success!!!")
-            .errors(false)
-            .build();
+                .message("Register success!!!")
+                .errors(false)
+                .build();
 
     }
 
     @Override
     public Authentication authenticate(String username, String password) {
-        
+
         UserDetails userDetails = userService.findByUsername(username);
 
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
-    
+
 }

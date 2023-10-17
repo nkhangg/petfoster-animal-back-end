@@ -18,8 +18,9 @@ public interface ProductService {
     // ApiResponse getProductBySize();
     // ApiResponse getProductByInterval();
     // ApiResponse getProductByFilter();
-    ApiResponse createProduct( ProductRequest createProductReq, List<MultipartFile> listImgs);
-    ApiResponse updateProduct( String id, ProductRequest updateProductReq, List<MultipartFile> listImgs);
+    ApiResponse createProduct(ProductRequest createProductReq);
+
+    ApiResponse updateProduct(String id, ProductRequest updateProductReq);
 
     ApiResponse deleteProduct(String id);
 }
