@@ -31,7 +31,7 @@ import com.poly.petfoster.repository.UserRepository;
 import com.poly.petfoster.request.ResetPasswordRequest;
 import com.poly.petfoster.request.UpdateUserRequest;
 import com.poly.petfoster.response.ApiResponse;
-import com.poly.petfoster.response.admin.user.AllUserResponse;
+import com.poly.petfoster.response.common.PagiantionResponse;
 import com.poly.petfoster.response.order_history.OrderHistory;
 import com.poly.petfoster.service.UserService;
 import com.poly.petfoster.ultils.ImageUtils;
@@ -110,36 +110,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ApiResponse getAllUser(String jwt, Optional<Integer> pages) {
-        // String username = jwtProvider.getUsernameFromToken(jwt);
-
-        // User user = userRepository.findByUsername(username).orElse(null);
-
-        // user.setAvatar(portUltil.getUrlImage(user.getAvatar()));
 
         Pageable pageable = PageRequest.of(pages.orElse(0), 10);
 
         Page<User> data = userRepository.findAll(pageable);
 
-        // int startIndex = (int) pageable.getOffset();
-        // int endIndex = Math.min(startIndex + pageable.getPageSize(), data.size());
-
-        // if (startIndex >= endIndex) {
-        // return ApiResponse.builder()
-        // .message(RespMessage.NOT_FOUND.getValue())
-        // .data(null)
-        // .errors(true)
-        // .status(HttpStatus.NOT_FOUND.value())
-        // .build();
-        // }
-
-        // List<OrderHistory> visibleProducts = data.subList(startIndex, endIndex);
-        // Page<OrderHistory> pagination = new PageImpl<OrderHistory>(visibleProducts,
-        // pageable, data.size());
+        data.getContent().stream().forEach(item -> {
+            item.setAvatar(portUltil.getUrlImage(item.getAvatar()));
+        });
 
         return ApiResponse.builder().message("Successfully!")
                 .status(200)
                 .errors(false)
-                .data(AllUserResponse.builder().users(data.getContent()).pages(data.getTotalPages()).build())
+                .data(PagiantionResponse.builder().data(data.getContent()).pages(data.getTotalPages()).build())
                 .build();
     }
 
