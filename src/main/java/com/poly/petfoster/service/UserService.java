@@ -25,6 +25,6 @@ public interface UserService {
 
     public ApiResponse updateUser(UpdateUserRequest updateUserRequest);
 
-    public ApiResponse deleteUser(UpdateUserRequest updateUserRequest);
+    public ApiResponse deleteUser(String id);
 
 }

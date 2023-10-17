@@ -242,8 +242,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ApiResponse deleteUser(UpdateUserRequest updateUserRequest) {
-        User user = userRepository.findById(updateUserRequest.getId()).orElse(null);
+    public ApiResponse deleteUser(String id) {
+        User user = userRepository.findById(id).orElse(null);
 
         if (user == null) {
             return ApiResponse.builder()
@@ -258,7 +258,7 @@ public class UserServiceImpl implements UserService {
         User newUser = userRepository.save(user);
 
         return ApiResponse.builder()
-                .message("Update success!")
+                .message("Delete success!")
                 .errors(false)
                 .status(HttpStatus.OK.value())
                 .data(newUser)
