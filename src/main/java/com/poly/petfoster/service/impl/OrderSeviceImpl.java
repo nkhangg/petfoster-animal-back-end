@@ -130,15 +130,33 @@ public class OrderSeviceImpl implements OrderService{
                     .errors(errorsMap)
                     .build();
             }
+
+            
+            Product product = productRepository.findById(orderProduct.getProductId()).orElse(null);
+            ProductRepo productRepo = productRepoRepository.findProductRepoByIdAndSize(orderProduct.getProductId(), orderProduct.getSize());
+
+            if(productRepo.getQuantity() < orderProduct.getQuantity()) {
+                errorsMap.put("quantity", "quantity are not enought, please try another one!!!");
+                return ApiResponse.builder()
+                    .message(HttpStatus.BAD_REQUEST.toString())
+                    .errors(errorsMap)
+                    .build();
+            }
             
             OrderDetail orderDetail = this.createOrderDetail(order, orderProduct);
             orderDetails.add(orderDetail);
+
+            // ProductRepo productRepo = productRepoRepository.findProductRepoByIdAndSize(orderDetail.getProduct().getId(), orderDetail.getSize());
+            
+            productRepo.setQuantity(productRepo.getQuantity() - orderDetail.getQuantity());
+            productRepoRepository.save(productRepo);
 
             total += orderDetail.getTotal();
         }
 
         order.setTotal(total);
         order.setOrderDetails(orderDetails);
+        order.setStatus("Placed");
         ordersRepository.save(order);
 
         return ApiResponse.builder()

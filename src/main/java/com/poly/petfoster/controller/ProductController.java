@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.poly.petfoster.request.product.ProductRequest;
 import com.poly.petfoster.response.ApiResponse;
-import com.poly.petfoster.response.ProductResponse;
 import com.poly.petfoster.service.ProductService;
 
 @RestController
