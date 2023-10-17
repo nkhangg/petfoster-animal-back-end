@@ -95,17 +95,17 @@ public class ProductServiceImpl implements ProductService {
         public ApiResponse createProduct(ProductRequest ProductReq, List<MultipartFile> listImgs) {
                 Map<String, String> errorsMap = new HashMap<>();
 
-                if (productRepository.existsById(ProductReq.getId())) {
-                        errorsMap.put("null", "null");
-                        return ApiResponse.builder()
-                                        .message("Product ID already!")
-                                        .status(null)
-                                        .errors(errorsMap)
-                                        .data(null)
-                                        .build();
+                // if (productRepository.existsById(ProductReq.getId())) {
+                // errorsMap.put("null", "null");
+                // return ApiResponse.builder()
+                // .message("Product ID already!")
+                // .status(null)
+                // .errors(errorsMap)
+                // .data(null)
+                // .build();
 
-                }
-                System.out.println(ProductReq);
+                // }
+                // System.out.println(ProductReq);
                 // System.out.println(ProductReq.getProductsRepo());
                 // System.out.println(ProductReq.getImgs());
                 // ProductType newProductType = ProductType.builder()
@@ -114,11 +114,19 @@ public class ProductServiceImpl implements ProductService {
                 // .build();
 
                 // productTypeRepository.findById(ProductReq.getProductType().getId());
+
+                Integer lastId = Integer.parseInt(productRepository.findAll()
+                                .get(productRepository.findAll().size() - 1).getId().substring(2, 6));
+                System.out.println(lastId);
+                String id = "PD0001";
+                String newId = "PD0001";
+                newId = newId.replace("01", String.valueOf(lastId + 1));
+                System.out.println(newId);
                 Product newProduct = Product.builder()
-                                .id(ProductReq.getId())
+                                .id(newId)
                                 .name(ProductReq.getName())
                                 .desc(ProductReq.getDesc())
-                                .isActive(ProductReq.getIsActive())
+                                .isActive(true)
                                 .brand(ProductReq.getBrand())
                                 // .createAt(null)
                                 // .productType(ProductReq.getProductType())
@@ -127,7 +135,6 @@ public class ProductServiceImpl implements ProductService {
                 productRepository.save(newProduct);
 
                 newProduct.setProductType(ProductReq.getProductType());
-
 
                 for (ProductRepo e : ProductReq.getProductsRepo()) {
                         e.setProduct(newProduct);
@@ -162,9 +169,11 @@ public class ProductServiceImpl implements ProductService {
                 }
                 newProduct.setImgs(listImgsProduct);
 
+                newProduct.setCreateAt(productRepository.findById(newId).get().getCreateAt());
+
                 productRepository.save(newProduct);
 
-                Product selectProduct = productRepository.findById(ProductReq.getId()).orElse(null);
+                Product selectProduct = productRepository.findById(newId).orElse(null);
 
                 if (selectProduct == null) {
                         return ApiResponse.builder()
@@ -195,10 +204,10 @@ public class ProductServiceImpl implements ProductService {
         };
 
         @Override
-        public ApiResponse updateProduct(String id, ProductRequest ProductReq) {
+        public ApiResponse updateProduct(String id, ProductRequest ProductReq, List<MultipartFile> listImgs) {
                 Map<String, String> errorsMap = new HashMap<>();
 
-                if (productRepository.existsById(ProductReq.getId())) {
+                if (productRepository.existsById(id)) {
                         Product selectProduct2 = productRepository.findById(id).orElse(null);
 
                         Product updateProduct = Product.builder()
@@ -220,33 +229,34 @@ public class ProductServiceImpl implements ProductService {
                         }
                         updateProduct.setProductsRepo(ProductReq.getProductsRepo());
                         //
-                        List<Imgs> listImgs = new ArrayList<>();
-                        
-                        // for (MultipartFile item : ProductReq.getImgs()) {
-                        //         if (item.getSize() > 500000) {
-                        //                 errorsMap.put("Imgs", "Image size is too large");
-                        //         } else {
-                        //                 try {
-                        //                         File file = ImageUtils.createFileImage();
-                        //                         item.transferTo(new File(file.getAbsolutePath()));
-                        //                         Imgs img = new Imgs();
-                        //                         img.setNameImg(file.getName());
-                        //                         img.setProduct(updateProduct);
-                        //                         listImgs.add(img);
-                        //                 } catch (Exception e) {
-                        //                         e.printStackTrace();
-                        //                         return ApiResponse.builder()
-                        //                                         .message(RespMessage.INTERNAL_SERVER_ERROR.getValue())
-                        //                                         .errors(true)
-                        //                                         .status(500)
-                        //                                         .data(null)
-                        //                                         .build();
-                        //                 }
-                        //                 // e.setProduct(newProduct);
-                        //                 // imgsRepository.save(e);
-                        //         }
-                        // }
+                        List<Imgs> listImgsProduct = new ArrayList<>();
+                        for (MultipartFile item : listImgs) {
+                                if (item.getSize() > 500000) {
+                                        errorsMap.put("Imgs", "Image size is too large");
+                                } else {
+                                        try {
+                                                File file = ImageUtils.createFileImage();
+                                                item.transferTo(new File(file.getAbsolutePath()));
+                                                Imgs img = new Imgs();
+                                                img.setNameImg(file.getName());
+                                                img.setProduct(updateProduct);
+                                                listImgsProduct.add(img);
+                                        } catch (Exception e) {
+                                                e.printStackTrace();
+                                                return ApiResponse.builder()
+                                                                .message(RespMessage.INTERNAL_SERVER_ERROR.getValue())
+                                                                .errors(true)
+                                                                .status(500)
+                                                                .data(null)
+                                                                .build();
+                                        }
+                                        // e.setProduct(newProduct);
+                                        // imgsRepository.save(e);
+                                }
+                        }
+                        updateProduct.setImgs(listImgsProduct);
 
+                        // updateProduct.setCreateAt(productRepository.findById(id).get().getCreateAt());
                         productRepository.save(updateProduct);
 
                 } else {

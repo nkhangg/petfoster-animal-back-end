@@ -1,10 +1,8 @@
 package com.poly.petfoster.request.product;
-
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
 
-import org.springframework.web.multipart.MultipartFile;
 
 import com.poly.petfoster.entity.Imgs;
 import com.poly.petfoster.entity.OrderDetail;
@@ -15,14 +13,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProductRequest {
-    // @NotBlank(message = "Product ID can't be blank!")
-    // private String id;
+public class UpdateProductRequest {
+    @NotBlank(message = "Product ID can't be blank!")
+    private String id;
     @NotBlank(message = "Product Name can't be blank!")  
     private String name;
     @NotBlank(message = "Product Desciption can't be blank!")
