@@ -39,20 +39,19 @@ public class ProductController {
     public ResponseEntity<ApiResponse> getProduct(@PathVariable("id") String id) {
         return ResponseEntity.ok(productService.getProduct(id));
     }
-    // @PostMapping(value =  "",consumes = { MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
-    // public ResponseEntity<ApiResponse> createProduct(@RequestBody ProductRequest productRequest,@RequestParam List<MultipartFile> listImgs) {
-    //     return ResponseEntity.ok(productService.createProduct(productRequest, listImgs));
-    // }
-    @PostMapping(value =  "",consumes = { MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<ApiResponse> createProduct(@RequestPart("product") ProductRequest productRequest,@RequestPart("listImgs") List<MultipartFile> listImgs) {
-        return ResponseEntity.ok(productService.createProduct(productRequest, listImgs));
+
+    @PostMapping(value = "")
+    public ResponseEntity<ApiResponse> createProduct(@RequestBody ProductRequest productRequest) {
+        return ResponseEntity.ok(productService.createProduct(productRequest));
     }
-    @PutMapping(value ="{id}",consumes = { MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<ApiResponse> updateProduct(@PathVariable("id") String id ,@RequestPart("product") ProductRequest productRequest ,@RequestPart("listImgs") List<MultipartFile> listImgs) {
-        return ResponseEntity.ok(productService.updateProduct(id, productRequest,listImgs));
 
+    @PostMapping(value = "{id}")
+    public ResponseEntity<ApiResponse> updateProduct(@PathVariable("id") String id,
+            @RequestBody ProductRequest productRequest) {
+        System.out.println(productRequest);
+        return ResponseEntity.ok(productService.updateProduct(id, productRequest));
 
-
+    }
 
     @DeleteMapping("{id}")
     public ResponseEntity<ApiResponse> DeleteProduct(@PathVariable("id") String id) {

@@ -40,7 +40,7 @@ import com.poly.petfoster.ultils.FormatUtils;
 import com.poly.petfoster.ultils.PortUltil;
 
 @Service
-public class OrderSeviceImpl implements OrderService{
+public class OrderSeviceImpl implements OrderService {
 
     @Autowired
     JwtProvider jwtProvider;
@@ -74,81 +74,82 @@ public class OrderSeviceImpl implements OrderService{
 
     @Override
     public ApiResponse createOrder(String jwt, OrderRequest orderRequest) {
-        
+
         Map<String, String> errorsMap = new HashMap<>();
         User user = userRepository.findByUsername(jwtProvider.getUsernameFromToken(jwt)).orElse(null);
 
-        if(user == null) {
+        if (user == null) {
             errorsMap.put("user", "user not found");
             return ApiResponse.builder()
-                              .message("Unauthenrized")
-                              .status(HttpStatus.UNAUTHORIZED.value())
-                              .errors(errorsMap).build();
+                    .message("Unauthenrized")
+                    .status(HttpStatus.UNAUTHORIZED.value())
+                    .errors(errorsMap).build();
         }
 
-        if(PatternExpression.NOT_SPECIAL_SPACE.matcher(orderRequest.getFullname()).find()) {
+        if (PatternExpression.NOT_SPECIAL_SPACE.matcher(orderRequest.getFullname()).find()) {
             errorsMap.put("fullname", "full name must not contains special characters!");
             return ApiResponse.builder()
-                .message(HttpStatus.BAD_REQUEST.toString())
-                .errors(errorsMap)
-                .build();
+                    .message(HttpStatus.BAD_REQUEST.toString())
+                    .errors(errorsMap)
+                    .build();
         }
 
-        if(orderRequest.getShippingFee() < 0) {
+        if (orderRequest.getShippingFee() < 0) {
             errorsMap.put("shippingFee", "Shipping fee must larger than 0");
             return ApiResponse.builder()
-                .message(HttpStatus.BAD_REQUEST.toString())
-                .errors(errorsMap)
-                .build();
+                    .message(HttpStatus.BAD_REQUEST.toString())
+                    .errors(errorsMap)
+                    .build();
         }
 
-        if(!PatternExpression.IS_PHONE_VALID.matcher(orderRequest.getPhone()).matches()) {
+        if (!PatternExpression.IS_PHONE_VALID.matcher(orderRequest.getPhone()).matches()) {
             errorsMap.put("phone", "phone number must start with 0 and has 10 digits!");
             return ApiResponse.builder()
-                .message(HttpStatus.BAD_REQUEST.toString())
-                .errors(errorsMap)
-                .build();
+                    .message(HttpStatus.BAD_REQUEST.toString())
+                    .errors(errorsMap)
+                    .build();
         }
 
-
         ShippingInfo shippingInfo = shippingInfoRepository.save(this.createShippingInfo(user, orderRequest));
-        
+
         Orders order = Orders.builder()
-            .shippingInfo(shippingInfo)
-            .build();
+                .shippingInfo(shippingInfo)
+                .build();
         ordersRepository.save(order);
 
-        
         List<OrderDetail> orderDetails = new ArrayList<>();
         Double total = 0.0;
         for (OrderProduct orderProduct : orderRequest.getOrderProducts()) {
 
-            if(orderProduct.getQuantity() < 0) {
+            if (orderProduct.getQuantity() < 0) {
                 errorsMap.put("quantity", "quantity must larger than 0");
                 return ApiResponse.builder()
-                    .message(HttpStatus.BAD_REQUEST.toString())
-                    .errors(errorsMap)
-                    .build();
+                        .message(HttpStatus.BAD_REQUEST.toString())
+                        .errors(errorsMap)
+                        .build();
             }
 
-            
             Product product = productRepository.findById(orderProduct.getProductId()).orElse(null);
-            ProductRepo productRepo = productRepoRepository.findProductRepoByIdAndSize(orderProduct.getProductId(), orderProduct.getSize());
+            ProductRepo productRepo = productRepoRepository.findProductRepoByIdAndSize(orderProduct.getProductId(),
+                    orderProduct.getSize());
 
-            if(productRepo.getQuantity() < orderProduct.getQuantity()) {
+            if (productRepo.getQuantity() < orderProduct.getQuantity()) {
                 errorsMap.put("quantity", "quantity are not enought, please try another one!!!");
                 return ApiResponse.builder()
-                    .message(HttpStatus.BAD_REQUEST.toString())
-                    .errors(errorsMap)
-                    .build();
+                        .message(HttpStatus.BAD_REQUEST.toString())
+                        .errors(errorsMap)
+                        .build();
             }
-            
+
             OrderDetail orderDetail = this.createOrderDetail(order, orderProduct);
             orderDetails.add(orderDetail);
 
-            // ProductRepo productRepo = productRepoRepository.findProductRepoByIdAndSize(orderDetail.getProduct().getId(), orderDetail.getSize());
-            
-            productRepo.setQuantity(productRepo.getQuantity() - orderDetail.getQuantity());
+            // ProductRepo productRepo =
+            // productRepoRepository.findProductRepoByIdAndSize(orderDetail.getProduct().getId(),
+            // orderDetail.getSize());
+
+            productRepo.setQuantity(productRepo.getQuantity() -
+                    orderDetail.getQuantity());
             productRepoRepository.save(productRepo);
 
             total += orderDetail.getTotal();
@@ -160,61 +161,59 @@ public class OrderSeviceImpl implements OrderService{
         ordersRepository.save(order);
 
         return ApiResponse.builder()
-                        .message("order successfuly!!!")
-                        .status(200)
-                        .errors(false)
-                        .data(orderDetails).build();
+                .message("order successfuly!!!")
+                .status(200)
+                .errors(false)
+                .data(orderDetails).build();
     }
-
 
     public ShippingInfo createShippingInfo(User user, OrderRequest orderRequest) {
 
         return ShippingInfo.builder()
-                    .user(user)
-                    .fullName(orderRequest.getFullname())
-                    .address(orderRequest.getAddress())
-                    .phone(orderRequest.getPhone())
-                    .shipFee(orderRequest.getShippingFee()).build();
+                .user(user)
+                .fullName(orderRequest.getFullname())
+                .address(orderRequest.getAddress())
+                .phone(orderRequest.getPhone())
+                .shipFee(orderRequest.getShippingFee()).build();
 
     }
 
-    
     public OrderDetail createOrderDetail(Orders order, OrderProduct orderProduct) {
 
         Product product = productRepository.findById(orderProduct.getProductId()).orElse(null);
-        ProductRepo productRepo = productRepoRepository.findProductRepoByIdAndSize(orderProduct.getProductId(), orderProduct.getSize());
+        ProductRepo productRepo = productRepoRepository.findProductRepoByIdAndSize(orderProduct.getProductId(),
+                orderProduct.getSize());
 
         OrderDetail orderDetail = orderDetailRepository.save(
-            OrderDetail.builder()
-                    .order(order)
-                    .product(product)
-                    .size(orderProduct.getSize())
-                    .quantity(orderProduct.getQuantity())
-                    .total(orderProduct.getQuantity() * productRepo.getOutPrice())
-                    .build()
-            );
+                OrderDetail.builder()
+                        .order(order)
+                        .product(product)
+                        .size(orderProduct.getSize())
+                        .quantity(orderProduct.getQuantity())
+                        .total(orderProduct.getQuantity() * productRepo.getOutPrice())
+                        .build());
 
         return orderDetail;
     }
-
 
     @Override
     public ApiResponse orderHistory(String jwt, Optional<Integer> page) {
 
         User user = userRepository.findByUsername(jwtProvider.getUsernameFromToken(jwt)).orElse(null);
 
-        if(user == null) {
+        if (user == null) {
             return ApiResponse.builder()
                     .message("Invalid Token!!!")
                     .status(400)
                     .errors("Invalid token")
                     .build();
         }
-       
+
         List<Orders> ordersHistory = ordersRepository.orderHistory(user.getId());
 
-        if(ordersHistory.isEmpty()) {
-            return ApiResponse.builder().message("No data available").status(200).errors(false).data(ordersHistory).build();
+        if (ordersHistory.isEmpty()) {
+            return ApiResponse.builder().message("No data available").status(200).errors(false).data(ordersHistory)
+                    .build();
         }
 
         List<OrderHistory> data = new ArrayList<>();
@@ -229,28 +228,28 @@ public class OrderSeviceImpl implements OrderService{
             }
 
             OrderHistory orderHistory = OrderHistory.builder()
-                .id(order.getId())
-                .datePlace(formatUtils.dateToString(order.getCreateAt()))
-                .state(order.getStatus())
-                .stateMessage(order.getStatus())
-                .total(order.getTotal())
-                .products(products)
-                .build();
-            
-                data.add(orderHistory);
+                    .id(order.getId())
+                    .datePlace(formatUtils.dateToString(order.getCreateAt()))
+                    .state(order.getStatus())
+                    .stateMessage(order.getStatus())
+                    .total(order.getTotal())
+                    .products(products)
+                    .build();
+
+            data.add(orderHistory);
         }
 
         Pageable pageable = PageRequest.of(page.orElse(0), 3);
         int startIndex = (int) pageable.getOffset();
         int endIndex = Math.min(startIndex + pageable.getPageSize(), data.size());
 
-        if(startIndex >= endIndex){
+        if (startIndex >= endIndex) {
             return ApiResponse.builder()
-            .message(RespMessage.NOT_FOUND.getValue())
-            .data(null)
-            .errors(true)
-            .status(HttpStatus.NOT_FOUND.value())
-            .build();
+                    .message(RespMessage.NOT_FOUND.getValue())
+                    .data(null)
+                    .errors(true)
+                    .status(HttpStatus.NOT_FOUND.value())
+                    .build();
         }
 
         List<OrderHistory> visibleProducts = data.subList(startIndex, endIndex);
@@ -258,30 +257,32 @@ public class OrderSeviceImpl implements OrderService{
 
         return ApiResponse.builder()
                 .message("Successfully")
-                .status(200).
-                errors(false).
-                data(OrderHistoryResponse.builder().data(pagination.getContent()).pages(pagination.getTotalPages()).build()).build();
+                .status(200).errors(false).data(OrderHistoryResponse.builder().data(pagination.getContent())
+                        .pages(pagination.getTotalPages()).build())
+                .build();
     }
 
-
-    public OrderProductItem createOrderProductItem(OrderDetail orderDetail){
+    public OrderProductItem createOrderProductItem(OrderDetail orderDetail) {
         String image = "";
 
-        if(!orderDetail.getProduct().getImgs().isEmpty()){
-            image = orderDetail.getProduct().getImgs().get(0).getNameImg();   
+        if (!orderDetail.getProduct().getImgs().isEmpty()) {
+            image = orderDetail.getProduct().getImgs().get(0).getNameImg();
         }
 
         return OrderProductItem
-            .builder()
-            .id(orderDetail.getProduct().getId())
-            .size(orderDetail.getSize())
-            .image(portUltil.getUrlImage(image))
-            .name(orderDetail.getProduct().getName())
-            .brand(orderDetail.getProduct().getBrand())
-            .price(productRepoRepository.findProductRepoByIdAndSize(orderDetail.getProduct().getId(), orderDetail.getSize()).getOutPrice().intValue())
-            .quantity(orderDetail.getQuantity())
-            .repo(productRepoRepository.findProductRepoByIdAndSize(orderDetail.getProduct().getId(), orderDetail.getSize()).getId())
-            .build();
+                .builder()
+                .id(orderDetail.getProduct().getId())
+                .size(orderDetail.getSize())
+                .image(portUltil.getUrlImage(image))
+                .name(orderDetail.getProduct().getName())
+                .brand(orderDetail.getProduct().getBrand())
+                .price(productRepoRepository
+                        .findProductRepoByIdAndSize(orderDetail.getProduct().getId(), orderDetail.getSize())
+                        .getOutPrice().intValue())
+                .quantity(orderDetail.getQuantity())
+                .repo(productRepoRepository
+                        .findProductRepoByIdAndSize(orderDetail.getProduct().getId(), orderDetail.getSize()).getId())
+                .build();
     }
 
 }
