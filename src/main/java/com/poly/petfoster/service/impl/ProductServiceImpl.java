@@ -5,10 +5,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,7 +20,6 @@ import com.poly.petfoster.constant.RespMessage;
 import com.poly.petfoster.entity.Imgs;
 import com.poly.petfoster.entity.Product;
 import com.poly.petfoster.entity.ProductRepo;
-import com.poly.petfoster.entity.ProductType;
 import com.poly.petfoster.repository.ImgsRepository;
 import com.poly.petfoster.repository.ProductRepoRepository;
 import com.poly.petfoster.repository.ProductRepository;
@@ -24,9 +27,12 @@ import com.poly.petfoster.repository.ProductTypeRespository;
 import com.poly.petfoster.request.product.ProductRequest;
 import com.poly.petfoster.response.ApiResponse;
 import com.poly.petfoster.response.ProductResponse;
+import com.poly.petfoster.response.common.PagiantionResponse;
+import com.poly.petfoster.response.product_manage.ProductDetailManageResponse;
+import com.poly.petfoster.response.product_manage.ProductManageResponse;
 import com.poly.petfoster.service.ProductService;
 import com.poly.petfoster.ultils.PortUltil;
-import com.poly.petfoster.ultils.ImageUtils;
+
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -41,55 +47,54 @@ public class ProductServiceImpl implements ProductService {
         @Autowired
         PortUltil portUltil;
 
-        @Override
-        public ApiResponse getAllProduct() {
-
-                Map<String, String> errorsMap = new HashMap<>();
-
-                return ApiResponse.builder()
-                                .message("Query product Successfully")
-                                .status(null)
-                                .errors(errorsMap)
-                                .data(productRepository.findAll())
-                                .build();
-        }
+        @Autowired
+        private PortUltil portUltil;
 
         @Override
-        public ApiResponse getProduct(String id) {
-                Map<String, String> errorsMap = new HashMap<>();
+        public ApiResponse getAllProduct(Optional<Integer> page) {
 
-                Product selectProduct = productRepository.findById(id).orElse(null);
+                List<ProductManageResponse> productItems = new ArrayList<>();
+                List<Product> products = productRepository.findAll();
 
-                // List<Product> list = new ArrayList<>();
-                // productRepository.save(null);
-                // list.add(productRepository.findAll());
-                if (selectProduct == null) {
+                Pageable pageable = PageRequest.of(page.orElse(0), 10);
+                int startIndex = (int) pageable.getOffset();
+                int endIndex = Math.min(startIndex + pageable.getPageSize(), products.size());
+
+                if (startIndex >= endIndex) {
                         return ApiResponse.builder()
-                                        .message("Can't found Product ID")
-                                        .status(HttpStatus.OK.value())
-                                        .errors(null)
+                                        .message(RespMessage.NOT_FOUND.getValue())
                                         .data(null)
+                                        .errors(true)
+                                        .status(HttpStatus.NOT_FOUND.value())
                                         .build();
                 }
-                ProductResponse data = ProductResponse.builder()
-                                .id(selectProduct.getId())
-                                .name(selectProduct.getName())
-                                .desc(selectProduct.getDesc())
-                                .productType(selectProduct.getProductType())
-                                .brand(selectProduct.getBrand())
-                                .createAt(selectProduct.getCreateAt())
-                                .isActive(selectProduct.getIsActive())
-                                .productsRepo(selectProduct.getProductsRepo())
-                                .imgs(selectProduct.getImgs())
-                                .build();
+
+                List<Product> visibleProducts = products.subList(startIndex, endIndex);
+
+                visibleProducts.stream().forEach(product -> {
+                        productItems.add(ProductManageResponse.builder()
+                                        .id(product.getId())
+                                        .image(portUltil.getUrlImage(product.getImgs().get(0).getNameImg()))
+                                        .brand(product.getBrand())
+                                        .name(product.getName())
+                                        .type(product.getProductType().getName())
+                                        .repo(productRepoRepository.findByProduct(product))
+                                        .build());
+                });
+
+                Page<ProductManageResponse> pagination = new PageImpl<ProductManageResponse>(productItems, pageable,
+                                products.size());
 
                 return ApiResponse.builder()
                                 .message("Query product Successfully")
                                 .status(HttpStatus.OK.value())
-                                .errors(null)
-                                .data(data)
+                                .errors(false)
+                                .data(PagiantionResponse.builder().data(pagination.getContent())
+                                                .pages(pagination.getTotalPages()).build())
                                 .build();
-        };
+        }
+
+        
 
         @Override
         public ApiResponse createProduct(ProductRequest ProductReq, List<MultipartFile> listImgs) {
@@ -299,35 +304,16 @@ public class ProductServiceImpl implements ProductService {
                                 .build();
         };
 
-        @Override
+       @Override
         public ApiResponse deleteProduct(String id) {
-                Map<String, String> errorsMap = new HashMap<>();
 
-                if (productRepository.existsById(id)) {
-                        Product selectProduct1 = productRepository.findById(id).orElse(null);
-
-                        Product updateProduct = Product.builder()
-                                        .id(id)
-                                        .name(selectProduct1.getName())
-                                        .desc(selectProduct1.getDesc())
-                                        .isActive(false)
-                                        .brand(selectProduct1.getBrand())
-                                        .productType(selectProduct1.getProductType())
-                                        .createAt(selectProduct1.getCreateAt())
-                                        // .productsRepo(ProductReq.getProductsRepo())
-                                        .build();
-                        productRepository.save(updateProduct);
-                        // updateProduct.setProductType(selectProduct1.getProductType());
-                        // productRepository.save(updateProduct);
-
-                } else {
+                if (!productRepository.existsById(id))
                         return ApiResponse.builder()
-                                        .message("Can't find Product ID")
-                                        .status(null)
-                                        .errors(errorsMap)
+                                        .message("Can't found Product ID")
+                                        .status(HttpStatus.NOT_FOUND.value())
+                                        .errors(null)
                                         .data(null)
                                         .build();
-                }
 
                 Product selectProduct = productRepository.findById(id).orElse(null);
 
@@ -339,23 +325,15 @@ public class ProductServiceImpl implements ProductService {
                                         .data(null)
                                         .build();
                 }
-                ProductResponse data = ProductResponse.builder()
-                                .id(selectProduct.getId())
-                                .name(selectProduct.getName())
-                                .desc(selectProduct.getDesc())
-                                .productType(selectProduct.getProductType())
-                                .brand(selectProduct.getBrand())
-                                .createAt(selectProduct.getCreateAt())
-                                .isActive(selectProduct.getIsActive())
-                                .productsRepo(selectProduct.getProductsRepo())
-                                .imgs(selectProduct.getImgs())
-                                .build();
+
+                // set active
+                selectProduct.setIsActive(false);
 
                 return ApiResponse.builder()
                                 .message("Query product Successfully")
                                 .status(HttpStatus.OK.value())
                                 .errors(null)
-                                .data(data)
+                                .data(productRepository.save(selectProduct))
                                 .build();
         };
 }

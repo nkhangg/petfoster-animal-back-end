@@ -1,4 +1,5 @@
 package com.poly.petfoster.controller;
+
 import javax.servlet.annotation.MultipartConfig;
 import javax.validation.Valid;
 
@@ -31,12 +32,13 @@ public class UserProfileController {
     ProfileService profileService;
 
     @GetMapping("/profile")
-    public ResponseEntity<ApiResponse> getProfile(@RequestHeader("Authorization") String jwt){
+    public ResponseEntity<ApiResponse> getProfile(@RequestHeader("Authorization") String jwt) {
         return ResponseEntity.ok(profileService.getProfile(jwt));
     }
 
     @PostMapping("/profile")
-    public ResponseEntity<ApiResponse> updateProfile(@ModelAttribute("user") ProfileRepuest profileRepuest, @RequestHeader("Authorization") String jwt) {
+    public ResponseEntity<ApiResponse> updateProfile(@ModelAttribute("user") ProfileRepuest profileRepuest,
+            @RequestHeader("Authorization") String jwt) {
         System.out.println(profileRepuest);
         return ResponseEntity.ok(profileService.updateProfile(profileRepuest, jwt));
     }

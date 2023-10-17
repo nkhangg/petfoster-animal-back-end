@@ -1,10 +1,12 @@
 package com.poly.petfoster.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -20,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.poly.petfoster.request.product.ProductRequest;
 import com.poly.petfoster.response.ApiResponse;
-import com.poly.petfoster.response.ProductResponse;
 import com.poly.petfoster.service.ProductService;
 
 @RestController
@@ -28,11 +29,10 @@ import com.poly.petfoster.service.ProductService;
 public class ProductController {
     @Autowired
     ProductService productService;
-    
-    
+
     @GetMapping("")
-    public ResponseEntity<ApiResponse> getAllProduct() {
-        return ResponseEntity.ok(productService.getAllProduct());
+    public ResponseEntity<ApiResponse> getAllProduct(@RequestParam("page") Optional<Integer> page) {
+        return ResponseEntity.ok(productService.getAllProduct(page));
     }
 
     @GetMapping("{id}")
@@ -50,9 +50,12 @@ public class ProductController {
     @PutMapping(value ="{id}",consumes = { MediaType.APPLICATION_JSON_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<ApiResponse> updateProduct(@PathVariable("id") String id ,@RequestPart("product") ProductRequest productRequest ,@RequestPart("listImgs") List<MultipartFile> listImgs) {
         return ResponseEntity.ok(productService.updateProduct(id, productRequest,listImgs));
-    }
+
+
+
+
     @DeleteMapping("{id}")
-    public ResponseEntity<ApiResponse> DeleteProduct(@PathVariable("id") String id ) {
+    public ResponseEntity<ApiResponse> DeleteProduct(@PathVariable("id") String id) {
         return ResponseEntity.ok(productService.deleteProduct(id));
     }
 }
