@@ -34,7 +34,7 @@ public class CRUDUserController {
 
     @GetMapping("/users")
     public ResponseEntity<ApiResponse> getProfile(@RequestHeader("Authorization") String jwt,
-            @RequestParam("pages") Optional<Integer> pages) {
+            @RequestParam("page") Optional<Integer> pages) {
 
         return ResponseEntity.ok(userService.getAllUser(jwt, pages));
     }
