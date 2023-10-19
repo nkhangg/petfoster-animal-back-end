@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.poly.petfoster.request.LoginRequest;
@@ -34,7 +35,8 @@ public class AuthController {
     }
 
     @PostMapping("register")
-    public ResponseEntity<AuthResponse> register(HttpServletRequest httpServletRequest, @Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<AuthResponse> register(HttpServletRequest httpServletRequest,
+            @Valid @RequestBody RegisterRequest registerRequest) {
         return ResponseEntity.ok(authService.register(httpServletRequest, registerRequest));
     }
 

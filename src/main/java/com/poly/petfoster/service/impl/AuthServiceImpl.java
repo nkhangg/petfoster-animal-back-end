@@ -157,32 +157,32 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ApiResponse verifyEmail(String token) {
+        System.out.println(token);
 
         User user = userRepository.findByToken(token);
 
-        if(user == null) {
+        if (user == null) {
             return ApiResponse.builder()
-                .message("Token is not exists")
-                .status(404)
-                .errors(true)
-                .build();
+                    .message("Token is not exists")
+                    .status(404)
+                    .errors(true)
+                    .build();
         }
 
-        if(user.getIsEmailVerified() == true) {
+        if (user.getIsEmailVerified() == true) {
             return ApiResponse.builder()
-                .message("This account has been already verified, please login!")
-                .status(400)
-                .errors(true)
-                .build();
+                    .message("This account has been already verified, please login!")
+                    .status(400)
+                    .errors(true)
+                    .build();
         }
 
-
-        if(new Date().getTime() - user.getTokenCreateAt().getTime() > Constant.TOKEN_EXPIRE_LIMIT) {
+        if (new Date().getTime() - user.getTokenCreateAt().getTime() > Constant.TOKEN_EXPIRE_LIMIT) {
             return ApiResponse.builder()
-                .message("Token is expired")
-                .status(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED.value())
-                .errors(true)
-                .build();
+                    .message("Token is expired")
+                    .status(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED.value())
+                    .errors(true)
+                    .build();
         }
 
         user.setIsEmailVerified(true);
