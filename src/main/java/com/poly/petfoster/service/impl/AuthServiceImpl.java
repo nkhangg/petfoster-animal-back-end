@@ -27,7 +27,6 @@ import com.poly.petfoster.request.RegisterRequest;
 import com.poly.petfoster.response.ApiResponse;
 import com.poly.petfoster.response.AuthResponse;
 import com.poly.petfoster.service.AuthService;
-import com.poly.petfoster.service.EmailService;
 import com.poly.petfoster.service.UserService;
 
 @Service
@@ -79,7 +78,7 @@ public class AuthServiceImpl implements AuthService {
         if (!userDetails.isEnabled()) {
             errorsMap.put("email", "your email has not been verified");
             return AuthResponse.builder()
-                    .message(HttpStatus.BAD_REQUEST.toString())
+                    .message(HttpStatus.UNAUTHORIZED.value() + "")
                     .errors(errorsMap)
                     .build();
         }
@@ -164,7 +163,7 @@ public class AuthServiceImpl implements AuthService {
         if(user == null) {
             return ApiResponse.builder()
                 .message("Token is not exists")
-                .status(400)
+                .status(404)
                 .errors(true)
                 .build();
         }
@@ -181,7 +180,7 @@ public class AuthServiceImpl implements AuthService {
         if(new Date().getTime() - user.getTokenCreateAt().getTime() > Constant.TOKEN_EXPIRE_LIMIT) {
             return ApiResponse.builder()
                 .message("Token is expired")
-                .status(400)
+                .status(HttpStatus.BANDWIDTH_LIMIT_EXCEEDED.value())
                 .errors(true)
                 .build();
         }

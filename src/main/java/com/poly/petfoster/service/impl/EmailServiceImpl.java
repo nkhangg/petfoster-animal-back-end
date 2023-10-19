@@ -20,7 +20,7 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendVerificationEmail(HttpServletRequest req ,String email, UUID token) {
         
-        String verificationLink = "http://" + req.getServerName() + ":" + req.getServerPort() + req.getContextPath() + "/api/verify?token=" + token;
+        String verificationLink = Constant.BASE_URL + "verify?code=" + token;
         String body = "Please click the following link to verify your email: " + verificationLink; 
 
         mailUtils.sendEmail(email, "Email Verification", body);
