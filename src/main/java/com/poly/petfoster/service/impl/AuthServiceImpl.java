@@ -3,6 +3,9 @@ package com.poly.petfoster.service.impl;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,14 +17,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.poly.petfoster.config.JwtProvider;
+import com.poly.petfoster.constant.Constant;
 import com.poly.petfoster.constant.PatternExpression;
 import com.poly.petfoster.constant.RespMessage;
 import com.poly.petfoster.entity.User;
 import com.poly.petfoster.repository.UserRepository;
 import com.poly.petfoster.request.LoginRequest;
 import com.poly.petfoster.request.RegisterRequest;
+import com.poly.petfoster.response.ApiResponse;
 import com.poly.petfoster.response.AuthResponse;
 import com.poly.petfoster.service.AuthService;
+import com.poly.petfoster.service.EmailService;
 import com.poly.petfoster.service.UserService;
 
 @Service
@@ -35,6 +41,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    EmailServiceImpl emailServiceImpl;
 
     @Autowired
     JwtProvider jwtProvider;
@@ -67,6 +76,14 @@ public class AuthServiceImpl implements AuthService {
                     .build();
         }
 
+        if (!userDetails.isEnabled()) {
+            errorsMap.put("email", "your email has not been verified");
+            return AuthResponse.builder()
+                    .message(HttpStatus.BAD_REQUEST.toString())
+                    .errors(errorsMap)
+                    .build();
+        }
+
         Authentication authentication = authenticate(username, password);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -80,7 +97,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public AuthResponse register(RegisterRequest registerReq) {
+    public AuthResponse register(HttpServletRequest req, RegisterRequest registerReq) {
 
         Map<String, String> errorsMap = new HashMap<>();
 
@@ -125,8 +142,11 @@ public class AuthServiceImpl implements AuthService {
                 .createAt(new Date())
                 .isActive(true)
                 .role("ROLE_USER")
+                .isEmailVerified(false)
                 .build();
 
+        String token = sendToken(req, registerReq.getEmail()).toString();
+        newUser.setToken(token);
         userRepository.save(newUser);
 
         return AuthResponse.builder()
@@ -137,11 +157,61 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    public ApiResponse verifyEmail(String token) {
+
+        User user = userRepository.findByToken(token);
+
+        if(user == null) {
+            return ApiResponse.builder()
+                .message("Token is not exists")
+                .status(400)
+                .errors(true)
+                .build();
+        }
+
+        if(user.getIsEmailVerified() == true) {
+            return ApiResponse.builder()
+                .message("This account has been already verified, please login!")
+                .status(400)
+                .errors(true)
+                .build();
+        }
+
+
+        if(new Date().getTime() - user.getTokenCreateAt().getTime() > Constant.TOKEN_EXPIRE_LIMIT) {
+            return ApiResponse.builder()
+                .message("Token is expired")
+                .status(400)
+                .errors(true)
+                .build();
+        }
+
+        user.setIsEmailVerified(true);
+        userRepository.save(user);
+
+        return ApiResponse.builder()
+                .message("Your email was verified, login now")
+                .status(200)
+                .errors(false)
+                .data(user)
+                .build();
+
+    }
+
+    @Override
     public Authentication authenticate(String username, String password) {
 
         UserDetails userDetails = userService.findByUsername(username);
 
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
+
+    public UUID sendToken(HttpServletRequest req, String email) {
+
+        UUID token = UUID.randomUUID();
+        emailServiceImpl.sendVerificationEmail(req, email, token);
+
+        return token;
     }
 
 }
