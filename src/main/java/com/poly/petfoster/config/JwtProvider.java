@@ -18,27 +18,27 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtProvider {
-    
+
     SecretKey key = Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
 
     public String generateToken(Authentication authentication) {
 
         return Jwts.builder()
-        .setIssuedAt(new Date())
-        .setExpiration(new Date(new Date().getTime()+3600000))
-        .claim("username", authentication.getName())
-        .claim("authorities", getAuthoritiesAsString(authentication))
-        .signWith(key).compact();
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(new Date().getTime() + 360000000))
+                .claim("username", authentication.getName())
+                .claim("authorities", getAuthoritiesAsString(authentication))
+                .signWith(key).compact();
     }
 
     private String getAuthoritiesAsString(Authentication authentication) {
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         return authorities.stream()
-            .map(GrantedAuthority::getAuthority)
-            .collect(Collectors.joining(","));
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
     }
 
-    //Get username form jwt
+    // Get username form jwt
     public String getUsernameFromToken(String jwt) {
 
         jwt = jwt.substring(7);
