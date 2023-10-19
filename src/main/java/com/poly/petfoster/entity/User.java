@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -59,6 +60,13 @@ public class User {
 
 	@JsonIgnore
 	private Boolean isActive;
+
+	private Boolean isEmailVerified;
+
+	private String token;
+
+	@CreationTimestamp
+	private Date tokenCreateAt;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	@JsonIgnore
