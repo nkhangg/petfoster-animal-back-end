@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "2a656025-93d1-4ddb-b01f-1300380b872b",
-		"name": "PetFoster",
+		"_postman_id": "fae4f1df-c4a5-49e4-8a84-5e87bba6939f",
+		"name": "PetFoster Copy 2",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "29532805"
 	},
@@ -26,7 +26,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"hoangvl\",\r\n    \"password\": \"123456\"\r\n}\r\n\r\n                    \r\n",
+							"raw": "{\r\n    \"username\": \"khangpn1\",\r\n    \"password\": \"123123\"\r\n}\r\n\r\n                    \r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -55,7 +55,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"duynq\",\r\n    \"password\": \"123456\",\r\n    \"confirmPassword\": \"123456\",\r\n    \"email\": \"duynq@gmail.com\",\r\n    \"gender\": \"true\",\r\n    \"fullname\": \"Nguyen Quoc Duy\"\r\n}\r\n\r\n",
+							"raw": "{\r\n    \"username\": \"khangpn2\",\r\n    \"password\": \"123123\",\r\n    \"confirmPassword\": \"123123\",\r\n    \"email\": \"khangpnpc04910@fpt.edu.vn\",\r\n    \"gender\": \"true\",\r\n    \"fullname\": \"ha lam\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -76,6 +76,35 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Verify Email",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8019/api/verify?code=dfcc1a9e-2786-4b53-b63e-a107b4b653ff",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8019",
+							"path": [
+								"api",
+								"verify"
+							],
+							"query": [
+								{
+									"key": "code",
+									"value": "dfcc1a9e-2786-4b53-b63e-a107b4b653ff"
+								}
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -88,16 +117,6 @@
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTcxMTc2MTQsImV4cCI6MTY5NzEyMTIxNCwidXNlcm5hbWUiOiJoYW50bDEiLCJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4ifQ.lAMoaT5TPOJiiLLm5IE2IJKXK0-o71F3_lbXt7g4RwebmA-t2czN4q1SukV-y14NTb5PWy6tOmp4Z7iv4vZp1Q",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -137,7 +156,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTcxMzIwMTAsImV4cCI6MTY5NzEzNTYxMCwidXNlcm5hbWUiOiJoYW50bDEiLCJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4ifQ.7_Z6y5d-O9dMVRGPZ4ebIz0KUfKVl4Pt6z-lpKnB3HWo-XYu1lKoHBZFrm6udGa2hUVi4739sDt8avY1p7HgjA",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTczOTE5NDYsImV4cCI6MTY5NzM5NTU0NiwidXNlcm5hbWUiOiJraGFuZ3BuIiwiYXV0aG9yaXRpZXMiOiJST0xFX0FETUlOIn0.28JFxiOAkdRoOfjlvRjeDEFU3gM3Zb0gULVeDpn-0HIOmL1YjXg_59NyTAFzuDC78mvMDAwhbd7Tn3pSnR_PzQ",
 									"type": "string"
 								}
 							]
@@ -180,20 +199,10 @@
 				{
 					"name": "Report Product Revenue By Date",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTcxNjI5NjYsImV4cCI6MTY5NzE2NjU2NiwidXNlcm5hbWUiOiJoYW50bDEiLCJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4ifQ.9y6_QL4pTr7D0Ftc_M6Whv63ym35zBhhFpy60xUA4H494SCOQoNwOstiHVChoGsm_CGOw5TUV7aw58vCvmhC8g",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8019/api/admin/report/product-revenue-by-date?minDate=2023-10-01&maxDate=2023-10-10",
+							"raw": "http://localhost:8019/api/admin/report/product-revenue-by-date",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -208,11 +217,13 @@
 							"query": [
 								{
 									"key": "minDate",
-									"value": "2023-10-01"
+									"value": "2023-10-01",
+									"disabled": true
 								},
 								{
 									"key": "maxDate",
-									"value": "2023-10-10"
+									"value": "2023-10-10",
+									"disabled": true
 								}
 							]
 						}
@@ -226,11 +237,26 @@
 			"item": [
 				{
 					"name": "Filter",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"id\": \"PD0047\",\r\n        \"name\": \"SOFA' TWEED\",\r\n        \"desc\": \"Enjoy for pet\",\r\n        \"productType\": {\r\n             \"id\": \"DF\",\r\n            \"name\": \"Dog food\"\r\n        },\r\n        \"isActive\": true,\r\n        \"brand\": \"Royal Canin\",\r\n        \"productsRepo\": [\r\n            {\r\n                \"size\": 1,\r\n                \"inPrice\": 20000.0,\r\n                \"outPrice\": 30000.0,\r\n                \"quantity\": 50,\r\n                \"inStock\": true\r\n            },\r\n            {\r\n                \"size\": 2,\r\n                \"inPrice\": 20011.0,\r\n                \"outPrice\": 300001.0,\r\n                \"quantity\": 5555,\r\n                \"inStock\": true\r\n            }\r\n        ],\r\n        \"orderDetails\": null\r\n        \r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:8019/api/filter-product/?typeName=Cat food&minPrice=0&maxPrice=500000&stock=True&brand=Canin&page=0",
+							"raw": "http://localhost:8019/api/filter-product/?sort=low&productName=undifine",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -244,27 +270,41 @@
 							"query": [
 								{
 									"key": "typeName",
-									"value": "Cat food"
+									"value": "null",
+									"disabled": true
 								},
 								{
 									"key": "minPrice",
-									"value": "0"
+									"value": "0",
+									"disabled": true
 								},
 								{
 									"key": "maxPrice",
-									"value": "500000"
+									"value": "500000",
+									"disabled": true
 								},
 								{
 									"key": "stock",
-									"value": "True"
+									"value": "true",
+									"disabled": true
 								},
 								{
 									"key": "brand",
-									"value": "Canin"
+									"value": "Canin",
+									"disabled": true
 								},
 								{
 									"key": "page",
-									"value": "0"
+									"value": "3",
+									"disabled": true
+								},
+								{
+									"key": "sort",
+									"value": "low"
+								},
+								{
+									"key": "productName",
+									"value": "undifine"
 								}
 							]
 						}
@@ -272,7 +312,66 @@
 					"response": []
 				},
 				{
-					"name": "Product Details",
+					"name": "[auth]Get all product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8019/api/admin/product/?page=3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8019",
+							"path": [
+								"api",
+								"admin",
+								"product",
+								""
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[auth] Delete product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8019/api/admin/product/PD0002",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8019",
+							"path": [
+								"api",
+								"admin",
+								"product",
+								"PD0002"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Product detail",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -294,12 +393,19 @@
 					"response": []
 				},
 				{
-					"name": "Get Types And Brands",
+					"name": "[auth]Edit Product",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
 						"url": {
-							"raw": "http://localhost:8019/api/product/types-brands",
+							"raw": "http://localhost:8019/api/admin/product/PD0001",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -307,9 +413,141 @@
 							"port": "8019",
 							"path": [
 								"api",
+								"admin",
 								"product",
-								"types-brands"
+								"PD0001"
 							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Accept-Charset",
+								"value": "utf-8",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \r\n        \"name\": \"SOFA' TWEED\",\r\n        \"desc\": \"Enjoy for pet\",\r\n        \"productType\": \"CF\",\r\n        \"brand\": \"Natural Core \",\r\n        \"productsRepo\": [\r\n            {\r\n                \"size\": 1,\r\n                \"inPrice\": 20000.0,\r\n                \"outPrice\": 30000.0,\r\n                \"quantity\": 50,\r\n                \"inStock\": true\r\n            },\r\n            {\r\n                \"size\": 2,\r\n                \"inPrice\": 20011.0,\r\n                \"outPrice\": 300001.0,\r\n                \"quantity\": 5555,\r\n                \"inStock\": true\r\n            }\r\n        ]\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8019/api/admin/product/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8019",
+							"path": [
+								"api",
+								"admin",
+								"product",
+								""
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "PD0001",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update s",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							},
+							{
+								"key": "Accept-Charset",
+								"value": "utf-8",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "listImgs",
+									"contentType": "",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "product",
+									"value": "{ \n        \"name\": \"SOFA' TWEED\",\n        \"desc\": \"Enjoy for pettttt\",\n        \"productType\": \"CF\",\n\"brand\": \"abc \",\n        \"productsRepo\": [\n            {\n                \"size\": 1,\n                \"inPrice\": 20000.0,\n                \"outPrice\": 30000.0,\n                \"quantity\": 50,\n                \"inStock\": true\n            }\n        ]\n    }",
+									"contentType": "application/json",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8019/api/admin/product/PD0041",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8019",
+							"path": [
+								"api",
+								"admin",
+								"product",
+								"PD0041"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "PD0001",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
 						}
 					},
 					"response": []
@@ -322,6 +560,9 @@
 				{
 					"name": "Take-action",
 					"request": {
+						"auth": {
+							"type": "noauth"
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
@@ -373,41 +614,54 @@
 			"item": [
 				{
 					"name": "[auth]Profile",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": ""
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "[auth]Update-profile",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
+						"body": {
+							"mode": "formdata",
+							"formdata": [
 								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTcwMzc1NDIsImV4cCI6MTY5NzA0MTE0MiwidXNlcm5hbWUiOiJraGFuZ3BuMSIsImF1dGhvcml0aWVzIjoiUk9MRV9BRE1JTiJ9.TAhbbwNpoX8Wk6UMZVBzsBv-hmHxef--Ev3JAWkSKx8F35lXZGX_oBy8W6gnEpZfZadBoDNHBHLm2bXRrY8yzA",
-									"type": "string"
+									"key": "fullname",
+									"value": "Pham Nhut Khang",
+									"type": "text"
+								},
+								{
+									"key": "birthday",
+									"value": "2003-12-21",
+									"type": "text"
+								},
+								{
+									"key": "gender",
+									"value": "true",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "0344507491",
+									"type": "text"
+								},
+								{
+									"key": "address",
+									"value": "phu tan chau thanh hau gianggg",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "123123",
+									"type": "text"
+								},
+								{
+									"key": "newPassword",
+									"value": "123123",
+									"type": "text"
 								}
 							]
 						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"id\": \"dc9d7109-6c0b-486f-b9e9-31266c2f8534\",\r\n    \"username\": \"khangpn1\",\r\n    \"fullname\": \"Pham Nhut Khang 123\",\r\n    \"phone\": \"123456\",\r\n    \"email\": \"ha1@gmail.com\",\r\n    \"gender\": \"false\",\r\n    \"birthday\": \"12/2/2023\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "http://localhost:8019/api/user/update",
+							"raw": "http://localhost:8019/api/user/profile",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -416,8 +670,157 @@
 							"path": [
 								"api",
 								"user",
-								"update"
+								"profile"
 							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[auth]Update-profile",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {
+							"accept": true
+						}
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "avartar",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8019/api/user/profile",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8019",
+							"path": [
+								"api",
+								"user",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[auth] Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8019/api/admin/users?page=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8019",
+							"path": [
+								"api",
+								"admin",
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[auth]Change Password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTcyNzkyMzAsImV4cCI6MTY5NzI4MjgzMCwidXNlcm5hbWUiOiJraGFuZ3BuMSIsImF1dGhvcml0aWVzIjoiUk9MRV9BRE1JTiJ9.YSxYAC-P5Kdwnp6h-8cGEqxkAW4bFnDWGvqCfbSwN86DsXTwYToQ871HF1hEbd05Tk6Kv5qu9Nu5j0WKsi2iWA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"123123\",\r\n    \"newPassword\": \"123123123\",\r\n    \"confirmPassword\": \"123123123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8019/api/user/changePass",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8019",
+							"path": [
+								"api",
+								"user",
+								"changePass"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forgot Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"phamnhatkhang.hgi1167@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8019/api/forgot-password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8019",
+							"path": [
+								"api",
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
 						}
 					},
 					"response": []
@@ -425,21 +828,11 @@
 			]
 		},
 		{
-			"name": "[auth]orther",
+			"name": "orther",
 			"item": [
 				{
 					"name": "[auth]payment",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTczOTMzNjMsImV4cCI6MTY5NzM5Njk2MywidXNlcm5hbWUiOiJkdXlucSIsImF1dGhvcml0aWVzIjoiUk9MRV9VU0VSIn0._xxWdaBXEKl_aDiWYS6wV1e5xYT4LyXN6RWUAXrO-hAElODz-zb1OE_4o3i2T6VX3onXfR553YHhstN3Q9XcBg",
-									"type": "string"
-								}
-							]
-						},
 						"method": "POST",
 						"header": [],
 						"body": {
@@ -466,29 +859,14 @@
 						}
 					},
 					"response": []
-				}
-			]
-		},
-		{
-			"name": "order",
-			"item": [
+				},
 				{
 					"name": "Order History",
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTczOTY3NjksImV4cCI6MTY5NzQwMDM2OSwidXNlcm5hbWUiOiJob2FuZ3ZsIiwiYXV0aG9yaXRpZXMiOiJST0xFX1VTRVIifQ.xv6ANCJjuq5oMwUMawHHWKeCTUAAOHg-5YIY3BT4cZMS2ir3mRoTWEpqU186CFXfM22dlnOLAG9wGFO4jtn7sw",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8019/api/user/order/history/?page=0",
+							"raw": "http://localhost:8019/api/user/order/history?page=1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -498,20 +876,147 @@
 								"api",
 								"user",
 								"order",
-								"history",
-								""
+								"history"
 							],
 							"query": [
 								{
 									"key": "page",
-									"value": "0"
+									"value": "1"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Types And Brands",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8019/api/product/types-brands",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8019",
+							"path": [
+								"api",
+								"product",
+								"types-brands"
 							]
 						}
 					},
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "imgs",
+			"item": [
+				{
+					"name": "Delete imgs",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8019/images/PD0040",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8019",
+							"path": [
+								"images",
+								"PD0040"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "product-repo",
+			"item": [
+				{
+					"name": "[auth] Update-Repo",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTc3ODAxODYsImV4cCI6MTY5Nzc4Mzc4NiwidXNlcm5hbWUiOiJoYW50bDEiLCJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4ifQ.YznFXPtefKu629eJjikY3lXhcuB1nTXL6l2-G5Uz1WwpahBURY0QYMWq_XBVMCc8TlmxI7Pei8OYJ683DNjywQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"inPrice\": 260000,\r\n    \"outPrice\": 320000,\r\n    \"quantity\": 70\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8019/api/admin/product-repo/105",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8019",
+							"path": [
+								"api",
+								"admin",
+								"product-repo",
+								"105"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTc2MTMwMjksImV4cCI6MTY5Nzk3MzAyOSwidXNlcm5hbWUiOiJraGFuZ3BuMSIsImF1dGhvcml0aWVzIjoiUk9MRV9BRE1JTiJ9.5hEMsZJqQ3Or_pIXW9popiycwylVZvFv-zcVYKi9Mr_S1wC78EAq2iO-hxnvc0aJApjXVa1RB2gLcqoJEyF4CA",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
