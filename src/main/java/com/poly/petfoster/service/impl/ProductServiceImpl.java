@@ -26,11 +26,13 @@ import com.poly.petfoster.repository.ImagesRepository;
 import com.poly.petfoster.repository.ProductRepoRepository;
 import com.poly.petfoster.repository.ProductRepository;
 import com.poly.petfoster.repository.ProductTypeRepository;
+import com.poly.petfoster.request.product.ProductInfoRequest;
 import com.poly.petfoster.request.product.ProductRequest;
 import com.poly.petfoster.response.ApiResponse;
 import com.poly.petfoster.response.ProductResponse;
 import com.poly.petfoster.response.common.PagiantionResponse;
 import com.poly.petfoster.response.product_manage.ProductDetailManageResponse;
+import com.poly.petfoster.response.product_manage.ProductInfoResponse;
 import com.poly.petfoster.response.product_manage.ProductManageResponse;
 import com.poly.petfoster.service.ProductService;
 import com.poly.petfoster.ultils.ImageUtils;
@@ -107,78 +109,6 @@ public class ProductServiceImpl implements ProductService {
                 String id = "PD0001";
                 String newId = "PD0001";
                 newId = newId.replace("01", String.valueOf(lastId + 1));
-                // Product newProduct = Product.builder()
-                // .id(newId)
-                // .name(ProductReq.getName())
-                // .desc(ProductReq.getDesc())
-                // .isActive(true)
-                // .brand(ProductReq.getBrand())
-                // .build();
-                // productRepository.save(newProduct);
-
-                // newProduct.setProductType(productTypeRepository.findById(ProductReq.getProductType()).orElse(null));
-
-                // for (ProductRepo e : ProductReq.getProductsRepo()) {
-                // e.setProduct(newProduct);
-                // productRepoRepository.save(e);
-                // }
-                // newProduct.setProductsRepo(ProductReq.getProductsRepo());
-
-                // List<Imgs> listImgsProduct = new ArrayList<>();
-                // for (MultipartFile item : listImgs) {
-                // if (item.getSize() > 500000) {
-                // errorsMap.put("Imgs", "Image size is too large");
-                // } else {
-                // try {
-                // File file = ImageUtils.createFileImage();
-                // item.transferTo(new File(file.getAbsolutePath()));
-                // Imgs img = new Imgs();
-                // img.setNameImg(file.getName());
-                // img.setProduct(newProduct);
-                // listImgsProduct.add(img);
-                // } catch (Exception e) {
-                // e.printStackTrace();
-                // return ApiResponse.builder()
-                // .message(RespMessage.INTERNAL_SERVER_ERROR.getValue())
-                // .errors(true)
-                // .status(500)
-                // .data(null)
-                // .build();
-                // }
-                // // e.setProduct(newProduct);
-                // // imgsRepository.save(e);
-                // }
-                // }
-                // newProduct.setImgs(listImgsProduct);
-
-                // newProduct.setCreateAt(productRepository.findById(newId).get().getCreateAt());
-
-                // productRepository.save(newProduct);
-
-                // Product selectProduct = productRepository.findById(newId).orElse(null);
-
-                // if (selectProduct == null) {
-                // return ApiResponse.builder()
-                // .message("Can't found Product ID")
-                // .status(HttpStatus.OK.value())
-                // .errors(true)
-                // .data(null)
-                // .build();
-                // }
-                // ProductResponse data = ProductResponse.builder()
-                // .id(selectProduct.getId())
-                // .name(selectProduct.getName())
-                // .desc(selectProduct.getDesc())
-                // .productType(selectProduct.getProductType())
-                // .brand(selectProduct.getBrand())
-                // .createAt(selectProduct.getCreateAt())
-                // .isActive(selectProduct.getIsActive())
-                // .productsRepo(selectProduct.getProductsRepo())
-                // .imgs(selectProduct.getImgs())
-                // .build();
-
-                // System.out.println(productTypeRepository.findById(productRequest.getProductType())
-                // .orElse(null));
 
                 Product product = Product.builder()
                                 .id(newId)
@@ -213,70 +143,6 @@ public class ProductServiceImpl implements ProductService {
         @Override
         public ApiResponse updateProduct(String id, ProductRequest productRequest) {
                 Map<String, String> errorsMap = new HashMap<>();
-
-                // if (productRepository.existsById(id)) {
-                // // Product selectProduct2 = productRepository.findById(id).orElse(null);
-
-                // // Product updateProduct = Product.builder()
-                // // .id(id)
-                // // .name(ProductReq.getName())
-                // // .desc(ProductReq.getDesc())
-                // // .isActive(true)
-                // // .brand(ProductReq.getBrand())
-                // // .createAt(selectProduct2.getCreateAt())
-                // // // .productType(ProductReq.getProductType())
-                // // // .productsRepo(ProductReq.getProductsRepo())
-                // // .build();
-                // // productRepository.save(updateProduct);
-                // // updateProduct.setProductType(
-                // // productTypeRepository.findById(ProductReq.getProductType()).orElse(null));
-
-                // // for (ProductRepo e : ProductReq.getProductsRepo()) {
-                // // e.setProduct(updateProduct);
-                // // productRepoRepository.save(e);
-                // // }
-                // // updateProduct.setProductsRepo(ProductReq.getProductsRepo());
-                // //
-                // // List<Imgs> listImgsProduct = new ArrayList<>();
-                // // for (MultipartFile item : listImgs) {
-                // // if (item.getSize() > 500000) {
-                // // errorsMap.put("Imgs", "Image size is too large");
-                // // } else {
-                // // try {
-                // // File file = ImageUtils.createFileImage();
-                // // item.transferTo(new File(file.getAbsolutePath()));
-                // // Imgs img = new Imgs();
-                // // img.setNameImg(file.getName());
-                // // img.setProduct(updateProduct);
-                // // listImgsProduct.add(img);
-                // // } catch (Exception e) {
-                // // e.printStackTrace();
-                // // return ApiResponse.builder()
-                // // .message(RespMessage.INTERNAL_SERVER_ERROR.getValue())
-                // // .errors(true)
-                // // .status(500)
-                // // .data(null)
-                // // .build();
-                // // }
-                // // // e.setProduct(newProduct);
-                // // // imgsRepository.save(e);
-                // // }
-                // // }
-                // // updateProduct.setImgs(listImgsProduct);
-
-                // // //
-                // //
-                // updateProduct.setCreateAt(productRepository.findById(id).get().getCreateAt());
-                // // productRepository.save(updateProduct);
-
-                // } else {
-                // return ApiResponse.builder()
-                // .message("Can't find Product ID")
-                // .status(null)
-                // .errors(errorsMap)
-                // .data(null)
-                // .build();
-                // }
 
                 if (!productRepository.existsById(id)) {
                         return ApiResponse.builder()
@@ -410,5 +276,97 @@ public class ProductServiceImpl implements ProductService {
                                 .errors(null)
                                 .data(data)
                                 .build();
+        }
+
+        @Override
+        public ApiResponse getProductInfo(String id) {
+
+                if (id.isEmpty()) {
+                        return ApiResponse.builder()
+                                        .message("Id invalid")
+                                        .status(HttpStatus.BAD_REQUEST.value())
+                                        .errors(true)
+                                        .data(null)
+                                        .build();
+                }
+
+                Product selectProduct = productRepository.findById(id).orElse(null);
+
+                if (selectProduct == null) {
+                        return ApiResponse.builder()
+                                        .message("Can't found product by id")
+                                        .status(404)
+                                        .errors(true)
+                                        .data(null)
+                                        .build();
+                }
+
+                return ApiResponse.builder()
+                                .message("Successfuly !")
+                                .status(HttpStatus.OK.value())
+                                .errors(false)
+                                .data(ProductInfoResponse.builder()
+                                                .id(selectProduct.getId())
+                                                .name(selectProduct.getName())
+                                                .brand(selectProduct.getBrand())
+                                                .type(selectProduct.getProductType().getId())
+                                                .description(selectProduct.getDesc())
+                                                .build())
+                                .build();
+        }
+
+        @Override
+        public ApiResponse updateProductWithInfo(String id, ProductInfoRequest productInfoRequest) {
+
+                System.out.println(id);
+                System.out.println(productInfoRequest);
+
+                if (id.isEmpty() || !id.equals(productInfoRequest.getId())) {
+                        return ApiResponse.builder()
+                                        .message("Id invalid")
+                                        .status(HttpStatus.BAD_REQUEST.value())
+                                        .errors(true)
+                                        .data(null)
+                                        .build();
+                }
+
+                Product selectProduct = productRepository.findById(id).orElse(null);
+
+                if (selectProduct == null) {
+                        return ApiResponse.builder()
+                                        .message("Can't found product by id")
+                                        .status(404)
+                                        .errors(true)
+                                        .data(null)
+                                        .build();
+                }
+
+                // all good
+                selectProduct.setBrand(productInfoRequest.getBrand());
+                selectProduct.setProductType(getNewTypeForProduct(productInfoRequest.getType(), selectProduct));
+                selectProduct.setName(productInfoRequest.getName());
+                selectProduct.setDesc(productInfoRequest.getDescription());
+
+                return ApiResponse.builder()
+                                .message("Update product successfully")
+                                .status(HttpStatus.OK.value())
+                                .errors(null)
+                                .data(productRepository.save(selectProduct))
+                                .build();
         };
+
+        public ProductType getNewTypeForProduct(String idType, Product product) {
+
+                if (idType.equals(product.getProductType().getId())) {
+                        return product.getProductType();
+                }
+
+                ProductType newType = productTypeRepository.findById(idType).orElse(null);
+
+                if (newType == null) {
+                        return product.getProductType();
+                }
+
+                return newType;
+        }
 }

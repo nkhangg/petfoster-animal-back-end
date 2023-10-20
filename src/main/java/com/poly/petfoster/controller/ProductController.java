@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.poly.petfoster.request.product.ProductInfoRequest;
 import com.poly.petfoster.request.product.ProductRequest;
 import com.poly.petfoster.response.ApiResponse;
 import com.poly.petfoster.service.ProductService;
@@ -38,6 +39,17 @@ public class ProductController {
     @GetMapping("{id}")
     public ResponseEntity<ApiResponse> getProduct(@PathVariable("id") String id) {
         return ResponseEntity.ok(productService.getProduct(id));
+    }
+
+    @GetMapping("info/{id}")
+    public ResponseEntity<ApiResponse> getProductInfo(@PathVariable("id") String id) {
+        return ResponseEntity.ok(productService.getProductInfo(id));
+    }
+
+    @PostMapping("info/{id}")
+    public ResponseEntity<ApiResponse> updateProductWithInfo(@PathVariable("id") String id,
+            @RequestBody ProductInfoRequest productInfoRequest) {
+        return ResponseEntity.ok(productService.updateProductWithInfo(id, productInfoRequest));
     }
 
     @PostMapping(value = "")
