@@ -15,5 +15,6 @@ public interface AuthService {
     AuthResponse register(HttpServletRequest httpServletRequest, RegisterRequest registerReq);
     Authentication authenticate(String username, String password);
     ApiResponse verifyEmail(String token);
+    ApiResponse refreshCode(HttpServletRequest httpServletRequest, String oldCode);
 
 }

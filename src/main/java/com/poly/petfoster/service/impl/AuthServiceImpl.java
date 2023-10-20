@@ -197,6 +197,8 @@ public class AuthServiceImpl implements AuthService {
 
     }
 
+    
+
     @Override
     public Authentication authenticate(String username, String password) {
 
@@ -211,6 +213,21 @@ public class AuthServiceImpl implements AuthService {
         emailServiceImpl.sendVerificationEmail(req, email, token);
 
         return token;
+    }
+
+
+    @Override
+    public ApiResponse refreshCode(HttpServletRequest httpServletRequest, String oldCode) {
+
+        UUID token = UUID.randomUUID();
+        User user = userRepository.findByToken(oldCode);
+
+        emailServiceImpl.sendVerificationEmail(httpServletRequest, user.getEmail(), token);
+        user.setToken(token.toString());
+        user.setTokenCreateAt(new Date());
+        userRepository.save(user);
+
+        return ApiResponse.builder().message("Successfully").status(200).errors(false).build();
     }
 
 }
