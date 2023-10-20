@@ -45,4 +45,9 @@ public class AuthController {
         return ResponseEntity.ok(authService.verifyEmail(code));
     }
 
+    @GetMapping("/refresh-code")
+    public ResponseEntity<ApiResponse> refreshCode(HttpServletRequest httpServletRequest, @RequestParam("code") String oldCode) {
+        return ResponseEntity.ok(authService.refreshCode(httpServletRequest, oldCode));
+    }
+
 }

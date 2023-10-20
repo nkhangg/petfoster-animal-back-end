@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.poly.petfoster.entity.Product;
 import com.poly.petfoster.entity.User;
 
 public interface UserRepository extends JpaRepository<User, String> {
