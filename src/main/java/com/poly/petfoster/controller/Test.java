@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.poly.petfoster.config.JwtProvider;
 import com.poly.petfoster.repository.UserRepository;
 import com.poly.petfoster.request.LoginRequest;
+import com.poly.petfoster.response.ApiResponse;
 import com.poly.petfoster.response.AuthResponse;
 
 @RestController

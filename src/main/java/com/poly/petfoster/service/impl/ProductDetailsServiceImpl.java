@@ -142,7 +142,7 @@ public class ProductDetailsServiceImpl implements ProductDetailsService {
                                 .size(productRepo.getSize())
                                 .price(productRepo.getOutPrice())
                                 .oldPrice(productRepo.getOutPrice() + (productRepo.getOutPrice() * (discount / 100.0)))
-                                .repo(productRepo.getId())
+                                .repo(productRepo.getQuantity())
                                 .build());
         }
 

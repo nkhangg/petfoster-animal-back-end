@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.poly.petfoster.entity.Product;
 import com.poly.petfoster.entity.User;
 
 public interface UserRepository extends JpaRepository<User, String> {
@@ -29,5 +28,8 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     @Query(nativeQuery = true, value = "select count(*) from users where is_active = 'true'")
     public Integer getTotalUsers();
+
+    @Query(nativeQuery = true, value = "select * from users where token = :token")
+    public User findByToken(@Param("token") String token);
 
 }
