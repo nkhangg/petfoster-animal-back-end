@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 public class ProductRepo {
-    
+
     @Id
     @Column(name = "product_repo_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,5 +41,9 @@ public class ProductRepo {
     private Integer quantity;
 
     private Boolean inStock;
+
+    @JsonIgnore
+    @Column(name = "is_active")
+    private Boolean isActive;
 
 }

@@ -6,4 +6,6 @@ public interface ImagesService {
     byte[] getImage(String fileName);
 
     ApiResponse deleteImgs(String id);
+
+    ApiResponse getImagesByIdProduct(String id);
 }
