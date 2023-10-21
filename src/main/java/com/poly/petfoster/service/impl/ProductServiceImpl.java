@@ -374,8 +374,11 @@ public class ProductServiceImpl implements ProductService {
         @Override
         public ApiResponse createProduct2(CreateProductRequest createProductRequest, List<MultipartFile> images) {
                 
+                Map<String, String> errorsMap = new HashMap<>();
+                List<Product> products = productRepository.findAll();
+
                 Product product = Product.builder()
-                        .id("111111")
+                        .id(getNextId(products.get(products.size() - 1).getId()))
                         .brand(createProductRequest.getBrand())
                         .desc(createProductRequest.getDescription())
                         .build();
@@ -390,6 +393,7 @@ public class ProductServiceImpl implements ProductService {
 
                 List<ProductRepo> repos = new ArrayList<>();
                 for (ProductRepoRequest productRepo : createProductRequest.getRepo()) {
+
                         ProductRepo repo = ProductRepo.builder()
                                 .size(productRepo.getSize())
                                 .inPrice(productRepo.getInPrice().doubleValue())
@@ -417,7 +421,6 @@ public class ProductServiceImpl implements ProductService {
                         FileOutputStream fos = new FileOutputStream(file);
                         fos.write(img.getBytes());
                         fos.close();
-                            data = imgName;
                             
                         } catch (Exception e) {
                            e.getMessage();
@@ -429,6 +432,27 @@ public class ProductServiceImpl implements ProductService {
                 product.setProductsRepo(repos);
                 product.setImgs(imgs);
 
-                return ApiResponse.builder().message(data).build();
+                return ApiResponse.builder().message("Successfully").status(200).errors(false).data(product).build();
+        }
+
+        public String getNextId(String lastId) {
+                
+                String nextId = "";
+                String first = lastId.substring(0, 2);
+                String last = lastId.substring(2);
+                Integer number = Integer.parseInt(last);
+                Double log = Math.log10(number);
+    
+                if (log < 1) {
+                        nextId = first + "000" + ++number;
+                } else if (log < 2) {
+                        nextId = first + "00" + ++number;
+                } else if (log < 3) {
+                        nextId = first + "0" + ++number;
+                } else {
+                        nextId = first + ++number;
+                }
+                
+                return nextId;
         }
 }

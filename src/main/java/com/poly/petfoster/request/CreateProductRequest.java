@@ -2,6 +2,7 @@ package com.poly.petfoster.request;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -26,8 +27,10 @@ public class CreateProductRequest {
     @NotBlank(message = "Product Type can't be blank!")
     private String type;
 
+    @NotBlank(message = "Product Type can't be blank!")
     private String brand;
 
+    @Valid
     private List<ProductRepoRequest> repo;
 
     private List<MultipartFile> images;

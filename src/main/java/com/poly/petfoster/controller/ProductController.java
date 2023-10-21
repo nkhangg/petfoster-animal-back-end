@@ -72,7 +72,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.deleteProduct(id));
     }
     
-    @PostMapping("/create2")
+    @PostMapping("/create")
     public ResponseEntity<ApiResponse> createProduct2(@ModelAttribute CreateProductRequest createProductRequest, @RequestPart List<MultipartFile> images) {
         return ResponseEntity.ok(productService.createProduct2(createProductRequest, images));
     }
