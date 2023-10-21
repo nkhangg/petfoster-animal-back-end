@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.poly.petfoster.config.JwtProvider;
 import com.poly.petfoster.repository.UserRepository;
 import com.poly.petfoster.request.LoginRequest;
+import com.poly.petfoster.request.TestRequest;
 import com.poly.petfoster.response.ApiResponse;
 import com.poly.petfoster.response.AuthResponse;
 
@@ -38,11 +39,8 @@ public class Test {
     }
 
     @PostMapping("/api/test")
-    public ResponseEntity<AuthResponse> login(@RequestPart("image") List<MultipartFile> file,
-            @RequestPart("data") LoginRequest loginRequest) {
-        System.out.println(file.get(0).getOriginalFilename());
-        System.out.println(loginRequest);
-
+    public ResponseEntity<AuthResponse> login(@RequestBody List<TestRequest> file) {
+        System.out.println(file.get(0));
         return ResponseEntity.ok(AuthResponse.builder().token("Khang").message("success").build());
     }
 
