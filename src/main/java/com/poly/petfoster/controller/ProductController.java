@@ -53,12 +53,6 @@ public class ProductController {
         return ResponseEntity.ok(productService.updateProductWithInfo(id, productInfoRequest));
     }
 
-    @PostMapping(value = "")
-    public ResponseEntity<ApiResponse> createProduct(@RequestBody ProductRequest productRequest) {
-        return ResponseEntity.ok(productService.createProduct(productRequest));
-    }
-   
-
     @PostMapping(value = "{id}")
     public ResponseEntity<ApiResponse> updateProduct(@PathVariable("id") String id,
             @RequestBody ProductRequest productRequest) {
@@ -71,10 +65,11 @@ public class ProductController {
     public ResponseEntity<ApiResponse> DeleteProduct(@PathVariable("id") String id) {
         return ResponseEntity.ok(productService.deleteProduct(id));
     }
-    
-    @PostMapping("/create")
-    public ResponseEntity<ApiResponse> createProduct2(@ModelAttribute CreateProductRequest createProductRequest, @RequestPart List<MultipartFile> images) {
-        return ResponseEntity.ok(productService.createProduct2(createProductRequest, images));
+
+    @PostMapping("")
+    public ResponseEntity<ApiResponse> createProduct(@ModelAttribute CreateProductRequest createProductRequest,
+            @RequestPart List<MultipartFile> images) {
+        return ResponseEntity.ok(productService.createProduct(createProductRequest, images));
     }
 
 }
