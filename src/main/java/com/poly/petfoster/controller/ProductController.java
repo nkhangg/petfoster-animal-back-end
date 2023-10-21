@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.poly.petfoster.request.CreateProductRequest;
 import com.poly.petfoster.request.product.ProductInfoRequest;
 import com.poly.petfoster.request.product.ProductRequest;
 import com.poly.petfoster.response.ApiResponse;
@@ -56,6 +57,7 @@ public class ProductController {
     public ResponseEntity<ApiResponse> createProduct(@RequestBody ProductRequest productRequest) {
         return ResponseEntity.ok(productService.createProduct(productRequest));
     }
+   
 
     @PostMapping(value = "{id}")
     public ResponseEntity<ApiResponse> updateProduct(@PathVariable("id") String id,
@@ -70,4 +72,9 @@ public class ProductController {
         return ResponseEntity.ok(productService.deleteProduct(id));
     }
     
+    @PostMapping("/create")
+    public ResponseEntity<ApiResponse> createProduct2(@ModelAttribute CreateProductRequest createProductRequest, @RequestPart List<MultipartFile> images) {
+        return ResponseEntity.ok(productService.createProduct2(createProductRequest, images));
+    }
+
 }

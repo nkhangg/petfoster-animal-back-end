@@ -14,4 +14,6 @@ public interface ImagesService {
     ApiResponse getImagesByIdProduct(String id);
 
     ApiResponse addImagesByIdProduct(String id, List<MultipartFile> images);
+
+    ApiResponse deleteImage(String id, Integer idImage);
 }

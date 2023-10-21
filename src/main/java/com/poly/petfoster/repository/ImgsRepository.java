@@ -20,5 +20,8 @@ public interface ImgsRepository extends JpaRepository<Imgs, Integer> {
 
     @Query(nativeQuery = true, value = "select * from imgs where product_id = :id")
     public List<Imgs> getImgsByProductId(@Param("id") String id);
-    
+
+    @Query("select image from Imgs image where image.product.id = :id and image.id = :idImage")
+    public Imgs getImageByProductId(@Param("id") String id, @Param("idImage") Integer idImage);
+
 }

@@ -26,7 +26,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"khangpn1\",\r\n    \"password\": \"123123\"\r\n}\r\n\r\n                    \r\n",
+							"raw": "{\r\n    \"username\": \"hantl1\",\r\n    \"password\": \"123456\"\r\n}\r\n\r\n                    \r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -423,13 +423,27 @@
 				},
 				{
 					"name": "Create Product",
+					"protocolProfileBehavior": {
+						"disabledSystemHeaders": {}
+					},
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2OTc4OTIxMjAsImV4cCI6MTY5ODI1MjEyMCwidXNlcm5hbWUiOiJoYW50bDEiLCJhdXRob3JpdGllcyI6IlJPTEVfQURNSU4ifQ.Ave3bgqjbgTEDGCyerGKC3ExWwUWrdt7UcY5v68P_8FWeoS-4GvafeEbFHsnWdaXJNNp1sRVy_w37AMa3UF68A",
+									"type": "string"
+								}
+							]
+						},
 						"method": "POST",
 						"header": [
 							{
 								"key": "Accept",
 								"value": "application/json",
-								"type": "text"
+								"type": "text",
+								"disabled": true
 							},
 							{
 								"key": "Content-Type",
@@ -445,16 +459,80 @@
 							}
 						],
 						"body": {
-							"mode": "raw",
-							"raw": "{ \r\n        \"name\": \"SOFA' TWEED\",\r\n        \"desc\": \"Enjoy for pet\",\r\n        \"productType\": \"CF\",\r\n        \"brand\": \"Natural Core \",\r\n        \"productsRepo\": [\r\n            {\r\n                \"size\": 1,\r\n                \"inPrice\": 20000.0,\r\n                \"outPrice\": 30000.0,\r\n                \"quantity\": 50,\r\n                \"inStock\": true\r\n            },\r\n            {\r\n                \"size\": 2,\r\n                \"inPrice\": 20011.0,\r\n                \"outPrice\": 300001.0,\r\n                \"quantity\": 5555,\r\n                \"inStock\": true\r\n            }\r\n        ]\r\n    }",
-							"options": {
-								"raw": {
-									"language": "json"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "images",
+									"type": "file",
+									"src": [
+										"/D:/WorkSpace/New folder/3.jpg",
+										"/D:/WorkSpace/New folder/13.jpg"
+									]
+								},
+								{
+									"key": "name",
+									"value": "SOFA' TWEED",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "Enjoy for pet",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "CF",
+									"type": "text"
+								},
+								{
+									"key": "brand",
+									"value": "Natural Core",
+									"type": "text"
+								},
+								{
+									"key": "repo[0].size",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "repo[0].quantity",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "repo[0].inPrice",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "repo[0].outPrice",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "repo[1].size",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "repo[1].quantity",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "repo[1].inPrice",
+									"value": "2",
+									"type": "text"
+								},
+								{
+									"key": "repo[1].outPrice",
+									"value": "2",
+									"type": "text"
 								}
-							}
+							]
 						},
 						"url": {
-							"raw": "http://localhost:8019/api/admin/product/",
+							"raw": "http://localhost:8019/api/admin/product/create",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -464,7 +542,7 @@
 								"api",
 								"admin",
 								"product",
-								""
+								"create"
 							],
 							"query": [
 								{
@@ -981,6 +1059,32 @@
 								"admin",
 								"product-repo",
 								"105"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "http://localhost:8019/api/verify?code=794b7a6b-67e4-4a74-8417-ff93b8d2f303",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8019/api/refresh-code?code=794b7a6b-67e4-4a74-8417-ff93b8d2f303",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8019",
+							"path": [
+								"api",
+								"refresh-code"
+							],
+							"query": [
+								{
+									"key": "code",
+									"value": "794b7a6b-67e4-4a74-8417-ff93b8d2f303"
+								}
 							]
 						}
 					},

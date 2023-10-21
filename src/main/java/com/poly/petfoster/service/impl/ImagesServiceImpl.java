@@ -15,7 +15,6 @@ import java.io.IOException;
 import com.poly.petfoster.constant.RespMessage;
 import com.poly.petfoster.entity.Imgs;
 import com.poly.petfoster.entity.Product;
-import com.poly.petfoster.entity.ProductRepo;
 import com.poly.petfoster.repository.ImgsRepository;
 import com.poly.petfoster.repository.ProductRepository;
 import com.poly.petfoster.response.ApiResponse;
@@ -71,6 +70,34 @@ public class ImagesServiceImpl implements ImagesService {
         }
 
         return ApiResponse.builder().message("Successfully").status(200).errors(false).data(imgs).build();
+    }
+
+    @Override
+    public ApiResponse deleteImage(String id, Integer idImage) {
+        Product product = productRepository.findById(id).orElse(null);
+        if (product == null) {
+            return ApiResponse.builder().message("Product id is not exists").status(404).errors(true)
+                    .build();
+        }
+
+        Imgs image = imgsRepository.getImageByProductId(id, idImage);
+
+        if (image == null) {
+            return ApiResponse.builder().message("Image id is not exists").status(404).errors(true)
+                    .build();
+        }
+
+        String fileName = image.getNameImg();
+        deleteImg(fileName);
+
+        imgsRepository.delete(image);
+
+        return ApiResponse.builder()
+                .message("Delete successfuly")
+                .status(HttpStatus.OK.value())
+                .errors(false)
+                .data(image)
+                .build();
     }
 
     public void deleteImg(String fileName) {
