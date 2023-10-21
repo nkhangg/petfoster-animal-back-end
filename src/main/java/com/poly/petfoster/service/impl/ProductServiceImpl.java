@@ -425,7 +425,9 @@ public class ProductServiceImpl implements ProductService {
                         } catch (Exception e) {
                            e.getMessage();
                         }
-                        imgs.add(Imgs.builder().product(product).nameImg(imgName).build());
+                        Imgs imgage = Imgs.builder().product(product).nameImg(imgName).build();
+                        imgs.add(imgage);
+                        imagesRepository.save(imgage);
                 }
 
                 product.setProductType(productType);
