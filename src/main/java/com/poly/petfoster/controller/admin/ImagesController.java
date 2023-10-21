@@ -27,4 +27,10 @@ public class ImagesController {
     public ResponseEntity<ApiResponse> getImagesByIdProduct(@PathVariable("id") String id) {
         return ResponseEntity.ok(imageService.getImagesByIdProduct(id));
     }
+
+    @DeleteMapping("{id}/{idImage}")
+    public ResponseEntity<ApiResponse> deleteImage(@PathVariable("id") String id,
+            @PathVariable("idImage") Integer idImage) {
+        return ResponseEntity.ok(imageService.deleteImage(id, idImage));
+    }
 }
