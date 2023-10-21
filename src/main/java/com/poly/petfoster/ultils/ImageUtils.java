@@ -58,9 +58,6 @@ public class ImageUtils {
         return new File("images\\" + uuid.toString() +".jpg");
     }
 
-    
-	
-
     // public static String getURLImage(String nameImage, TypeFileImage typeFileImage){
     //     HttpServletRequest request = 
     //     ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes())

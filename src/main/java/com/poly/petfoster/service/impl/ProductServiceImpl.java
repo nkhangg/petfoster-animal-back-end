@@ -1,6 +1,7 @@
 package com.poly.petfoster.service.impl;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,16 +27,16 @@ import com.poly.petfoster.repository.ImagesRepository;
 import com.poly.petfoster.repository.ProductRepoRepository;
 import com.poly.petfoster.repository.ProductRepository;
 import com.poly.petfoster.repository.ProductTypeRepository;
+import com.poly.petfoster.request.CreateProductRequest;
+import com.poly.petfoster.request.ProductRepoRequest;
 import com.poly.petfoster.request.product.ProductInfoRequest;
 import com.poly.petfoster.request.product.ProductRequest;
 import com.poly.petfoster.response.ApiResponse;
-import com.poly.petfoster.response.ProductResponse;
 import com.poly.petfoster.response.common.PagiantionResponse;
 import com.poly.petfoster.response.product_manage.ProductDetailManageResponse;
 import com.poly.petfoster.response.product_manage.ProductInfoResponse;
 import com.poly.petfoster.response.product_manage.ProductManageResponse;
 import com.poly.petfoster.service.ProductService;
-import com.poly.petfoster.ultils.ImageUtils;
 import com.poly.petfoster.ultils.PortUltil;
 
 @Service
@@ -368,5 +369,66 @@ public class ProductServiceImpl implements ProductService {
                 }
 
                 return newType;
+        }
+
+        @Override
+        public ApiResponse createProduct2(CreateProductRequest createProductRequest, List<MultipartFile> images) {
+                
+                Product product = Product.builder()
+                        .id("111111")
+                        .brand(createProductRequest.getBrand())
+                        .desc(createProductRequest.getDescription())
+                        .build();
+                
+                productRepository.save(product);
+
+                ProductType productType = productTypeRepository.findById(createProductRequest.getType()).orElse(null);
+
+                if(productType == null) {
+                        return ApiResponse.builder().message("Type id is not exists").status(404).errors("PRODUCT_TYPE_NOT_FOUND").build();
+                }
+
+                List<ProductRepo> repos = new ArrayList<>();
+                for (ProductRepoRequest productRepo : createProductRequest.getRepo()) {
+                        ProductRepo repo = ProductRepo.builder()
+                                .size(productRepo.getSize())
+                                .inPrice(productRepo.getInPrice().doubleValue())
+                                .outPrice(productRepo.getOutPrice().doubleValue())
+                                .quantity(productRepo.getQuantity())
+                                .build();
+                        productRepoRepository.save(repo);
+                        repos.add(repo);
+                }
+                
+                // List<MultipartFile> imgs
+                String data = "";
+                List<Imgs> imgs = new ArrayList<>();
+                for (MultipartFile img : images) {
+                        String imgName = img.getOriginalFilename();
+                        try {
+                            String dir = "images/";
+                            File file = new File(dir, imgName);
+
+                            if(!file.exists()) {
+                                file.createNewFile();
+                            }
+                            
+                        //     img.transferTo(file);
+                        FileOutputStream fos = new FileOutputStream(file);
+                        fos.write(img.getBytes());
+                        fos.close();
+                            data = imgName;
+                            
+                        } catch (Exception e) {
+                           e.getMessage();
+                        }
+                        imgs.add(Imgs.builder().product(product).nameImg(imgName).build());
+                }
+
+                product.setProductType(productType);
+                product.setProductsRepo(repos);
+                product.setImgs(imgs);
+
+                return ApiResponse.builder().message(data).build();
         }
 }
