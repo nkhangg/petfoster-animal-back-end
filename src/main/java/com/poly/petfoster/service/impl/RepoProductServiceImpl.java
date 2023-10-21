@@ -118,6 +118,7 @@ public class RepoProductServiceImpl implements ProductRepoService {
                 .outPrice(createRepoRequest.getOutPrice())
                 .quantity(createRepoRequest.getQuantity())
                 .size(createRepoRequest.getSize())
+                .isActive(true)
                 .build();
 
         return ApiResponse.builder().message("Successfully").status(200).errors(false)
