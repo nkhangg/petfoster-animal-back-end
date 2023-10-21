@@ -37,6 +37,7 @@ import com.poly.petfoster.response.product_manage.ProductDetailManageResponse;
 import com.poly.petfoster.response.product_manage.ProductInfoResponse;
 import com.poly.petfoster.response.product_manage.ProductManageResponse;
 import com.poly.petfoster.service.ProductService;
+import com.poly.petfoster.ultils.ImageUtils;
 import com.poly.petfoster.ultils.PortUltil;
 
 @Service
@@ -99,47 +100,6 @@ public class ProductServiceImpl implements ProductService {
                                                 .pages(pagination.getTotalPages()).build())
                                 .build();
         }
-
-        @Override
-        public ApiResponse createProduct(ProductRequest productRequest) {
-                Map<String, String> errorsMap = new HashMap<>();
-
-                Integer lastId = Integer.parseInt(productRepository.findAll()
-                                .get(productRepository.findAll().size() - 1).getId().substring(2, 6));
-                System.out.println(lastId);
-                String id = "PD0001";
-                String newId = "PD0001";
-                newId = newId.replace("01", String.valueOf(lastId + 1));
-
-                Product product = Product.builder()
-                                .id(newId)
-                                .brand(productRequest.getBrand())
-                                .productType(productTypeRepository.findById(productRequest.getProductType())
-                                                .orElse(null))
-                                .createAt(new Date())
-                                .desc(productRequest.getDesc())
-                                .isActive(true)
-                                .name(productRequest.getName())
-                                .build();
-
-                productRepository.save(product);
-
-                productRequest.getProductsRepo().forEach(item -> {
-                        item.setProduct(product);
-                });
-
-                productRepoRepository.saveAll(productRequest.getProductsRepo());
-                imagesRepository.save(Imgs.builder().nameImg("no-product-image.jpg").product(product).build());
-                product.setProductsRepo(productRequest.getProductsRepo());
-                product.setImgs(imagesRepository.findByProduct(product));
-
-                return ApiResponse.builder()
-                                .message("Query product Successfully")
-                                .status(HttpStatus.OK.value())
-                                .errors(false)
-                                .data(product)
-                                .build();
-        };
 
         @Override
         public ApiResponse updateProduct(String id, ProductRequest productRequest) {
@@ -371,80 +331,87 @@ public class ProductServiceImpl implements ProductService {
                 return newType;
         }
 
+        public ProductType getNewTypeForProduct(String idType) {
+                ProductType newType = productTypeRepository.findById(idType).orElse(null);
+                return newType;
+        }
+
         @Override
-        public ApiResponse createProduct2(CreateProductRequest createProductRequest, List<MultipartFile> images) {
-                
-                Map<String, String> errorsMap = new HashMap<>();
+        public ApiResponse createProduct(CreateProductRequest createProductRequest, List<MultipartFile> images) {
+
                 List<Product> products = productRepository.findAll();
 
                 Product product = Product.builder()
-                        .id(getNextId(products.get(products.size() - 1).getId()))
-                        .brand(createProductRequest.getBrand())
-                        .desc(createProductRequest.getDescription())
-                        .build();
-                
+                                .id(getNextId(products.get(products.size() - 1).getId()))
+                                .brand(createProductRequest.getBrand())
+                                .name(createProductRequest.getName())
+                                .isActive(true)
+                                .desc(createProductRequest.getDescription())
+                                .productType(getNewTypeForProduct(createProductRequest.getType()))
+                                .build();
+
                 productRepository.save(product);
 
                 ProductType productType = productTypeRepository.findById(createProductRequest.getType()).orElse(null);
 
-                if(productType == null) {
-                        return ApiResponse.builder().message("Type id is not exists").status(404).errors("PRODUCT_TYPE_NOT_FOUND").build();
+                if (productType == null) {
+                        return ApiResponse.builder().message("Type id is not exists").status(404)
+                                        .errors("PRODUCT_TYPE_NOT_FOUND").data(null).build();
                 }
 
                 List<ProductRepo> repos = new ArrayList<>();
                 for (ProductRepoRequest productRepo : createProductRequest.getRepo()) {
 
                         ProductRepo repo = ProductRepo.builder()
-                                .size(productRepo.getSize())
-                                .inPrice(productRepo.getInPrice().doubleValue())
-                                .outPrice(productRepo.getOutPrice().doubleValue())
-                                .quantity(productRepo.getQuantity())
-                                .build();
+                                        .size(productRepo.getSize())
+                                        .inPrice(productRepo.getInPrice().doubleValue())
+                                        .outPrice(productRepo.getOutPrice().doubleValue())
+                                        .quantity(productRepo.getQuantity())
+                                        .inStock(true)
+                                        .product(product)
+                                        .isActive(true)
+                                        .build();
                         productRepoRepository.save(repo);
                         repos.add(repo);
                 }
-                
-                // List<MultipartFile> imgs
-                String data = "";
-                List<Imgs> imgs = new ArrayList<>();
-                for (MultipartFile img : images) {
-                        String imgName = img.getOriginalFilename();
+
+                // save images
+                List<Imgs> newListImages = images.stream().map((image) -> {
+
                         try {
-                            String dir = "images/";
-                            File file = new File(dir, imgName);
+                                File file = ImageUtils.createFileImage();
 
-                            if(!file.exists()) {
-                                file.createNewFile();
-                            }
-                            
-                        //     img.transferTo(file);
-                        FileOutputStream fos = new FileOutputStream(file);
-                        fos.write(img.getBytes());
-                        fos.close();
-                            
+                                image.transferTo(new File(file.getAbsolutePath()));
+                                Imgs newImages = Imgs.builder()
+                                                .nameImg(file.getName())
+                                                .product(product)
+                                                .build();
+
+                                return newImages;
+
                         } catch (Exception e) {
-                           e.getMessage();
-                        }
-                        Imgs imgage = Imgs.builder().product(product).nameImg(imgName).build();
-                        imgs.add(imgage);
-                        imagesRepository.save(imgage);
-                }
+                                System.out.println(e.getMessage());
+                                return null;
 
+                        }
+                }).toList();
+
+                imagesRepository.saveAll(newListImages);
                 product.setProductType(productType);
                 product.setProductsRepo(repos);
-                product.setImgs(imgs);
+                product.setImgs(newListImages);
 
                 return ApiResponse.builder().message("Successfully").status(200).errors(false).data(product).build();
         }
 
         public String getNextId(String lastId) {
-                
+
                 String nextId = "";
                 String first = lastId.substring(0, 2);
                 String last = lastId.substring(2);
                 Integer number = Integer.parseInt(last);
                 Double log = Math.log10(number);
-    
+
                 if (log < 1) {
                         nextId = first + "000" + ++number;
                 } else if (log < 2) {
@@ -454,7 +421,7 @@ public class ProductServiceImpl implements ProductService {
                 } else {
                         nextId = first + ++number;
                 }
-                
+
                 return nextId;
         }
 }

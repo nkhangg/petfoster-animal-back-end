@@ -19,16 +19,10 @@ public interface ProductService {
 
     ApiResponse updateProductWithInfo(String id, ProductInfoRequest productInfoRequest);
 
-    // ApiResponse getProductByType();
-    // ApiResponse getProductBySize();
-    // ApiResponse getProductByInterval();
-    // ApiResponse getProductByFilter();
-    ApiResponse createProduct(ProductRequest createProductReq);
-
     ApiResponse updateProduct(String id, ProductRequest updateProductReq);
 
     ApiResponse deleteProduct(String id);
 
-    ApiResponse createProduct2(CreateProductRequest createProductRequest, List<MultipartFile> images);
+    ApiResponse createProduct(CreateProductRequest createProductRequest, List<MultipartFile> images);
 
 }

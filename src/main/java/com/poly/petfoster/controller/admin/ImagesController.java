@@ -37,6 +37,8 @@ public class ImagesController {
     @DeleteMapping("{id}")
     public ResponseEntity<ApiResponse> deleteImgs(@PathVariable("id") String id) {
         return ResponseEntity.ok(imageService.deleteImgs(id));
+    }
+
     @DeleteMapping("{id}/{idImage}")
     public ResponseEntity<ApiResponse> deleteImage(@PathVariable("id") String id,
             @PathVariable("idImage") Integer idImage) {
