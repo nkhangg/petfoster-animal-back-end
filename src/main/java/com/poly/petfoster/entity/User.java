@@ -56,15 +56,19 @@ public class User {
 	private String role;
 
 	@Column(name = "create_at")
+	@CreationTimestamp
 	private Date createAt;
 
 	@JsonIgnore
 	private Boolean isActive;
 
+	@JsonIgnore
 	private Boolean isEmailVerified;
 
+	@JsonIgnore
 	private String token;
 
+	@JsonIgnore
 	@CreationTimestamp
 	private Date tokenCreateAt;
 
