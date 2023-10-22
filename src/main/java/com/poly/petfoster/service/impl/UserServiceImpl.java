@@ -94,7 +94,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(existsUser);
 
         // Send password to mail
-        mailUtils.sendEmail(resetPasswordRequest.getEmail(), "New password", "New your password is " + newPassword);
+        mailUtils.sendEmail(resetPasswordRequest.getEmail(), "Reset password", "Your new password is " + newPassword);
         return ApiResponse.builder().data(existsUser).message("Successfully!").status(200)
                 .errors(false).build();
     }

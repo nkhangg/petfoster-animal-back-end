@@ -101,7 +101,7 @@ public class AuthServiceImpl implements AuthService {
         Map<String, String> errorsMap = new HashMap<>();
 
         if (PatternExpression.NOT_SPECIAL.matcher(registerReq.getUsername()).find()) {
-            errorsMap.put("username", "username must not contains special characters!");
+            errorsMap.put("username", "Username must not contains special characters!");
             return AuthResponse.builder()
                     .message(HttpStatus.BAD_REQUEST.toString())
                     .errors(errorsMap)
@@ -109,7 +109,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         if (userRepository.existsByUsername(registerReq.getUsername())) {
-            errorsMap.put("username", RespMessage.EXISTS);
+            errorsMap.put("username", "Username " + RespMessage.EXISTS);
             return AuthResponse.builder()
                     .message(HttpStatus.CONFLICT.toString())
                     .errors(errorsMap)
@@ -117,7 +117,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         if (userRepository.existsByEmail(registerReq.getEmail())) {
-            errorsMap.put("email", RespMessage.EXISTS);
+            errorsMap.put("email", "Email " + RespMessage.EXISTS);
             return AuthResponse.builder()
                     .message(HttpStatus.CONFLICT.toString())
                     .errors(errorsMap)
@@ -125,7 +125,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         if (!registerReq.getPassword().equals(registerReq.getConfirmPassword())) {
-            errorsMap.put("password confirm", "is incorrect");
+            errorsMap.put("password confirm", "Password confirm is incorrect");
             return AuthResponse.builder()
                     .message(HttpStatus.CONFLICT.toString())
                     .errors(errorsMap)
