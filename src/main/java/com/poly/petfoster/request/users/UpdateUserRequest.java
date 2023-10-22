@@ -1,4 +1,4 @@
-package com.poly.petfoster.request;
+package com.poly.petfoster.request.users;
 
 import java.util.Date;
 import java.util.Optional;
@@ -31,34 +31,25 @@ public class UpdateUserRequest {
     private String id;
 
     @NotBlank(message = RespMessage.NOT_EMPTY)
-	private String username;
-
-    @NotBlank(message = RespMessage.NOT_EMPTY)
-	private String fullname;
+    private String fullname;
 
     @NotBlank(message = RespMessage.NOT_EMPTY)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Optional<Date> birthday;
+    private Optional<Date> birthday;
 
     @NotNull(message = RespMessage.NOT_EMPTY)
-	private Boolean gender;
+    private Boolean gender;
 
     @NotBlank(message = RespMessage.NOT_EMPTY)
-	private String phone;
+    private String phone;
 
     @NotBlank(message = RespMessage.NOT_EMPTY)
-	private String address;
+    private String address;
 
-	private MultipartFile avatar;
+    private MultipartFile avatar;
 
     @NotEmpty(message = RespMessage.NOT_EMPTY)
     @Email(message = "is invalid")
-	private String email;
-
-    @NotBlank(message = RespMessage.NOT_EMPTY)
-	private String role;
-
-    @NotBlank(message = RespMessage.NOT_EMPTY)
-	private Date createAt;
+    private String email;
 
 }

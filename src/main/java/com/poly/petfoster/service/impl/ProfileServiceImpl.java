@@ -71,8 +71,6 @@ public class ProfileServiceImpl implements ProfileService {
 
     // start validate
 
-    System.out.println(profileRepuest);
-
     if (!user.getEmail().equals(profileRepuest.getEmail())) {
       errorsMap.put("email", "Can't update email !");
     }
@@ -136,6 +134,7 @@ public class ProfileServiceImpl implements ProfileService {
     if (!errorsMap.isEmpty()) {
       return ApiResponse.builder()
           .message("Update faild !")
+          .status(501)
           .errors(errorsMap)
           .data(null)
           .build();

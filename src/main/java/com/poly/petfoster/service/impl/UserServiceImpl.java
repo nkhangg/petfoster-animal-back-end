@@ -20,6 +20,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,11 +31,13 @@ import com.poly.petfoster.entity.User;
 import com.poly.petfoster.random.RandomPassword;
 import com.poly.petfoster.repository.UserRepository;
 import com.poly.petfoster.request.ResetPasswordRequest;
-import com.poly.petfoster.request.UpdateUserRequest;
+import com.poly.petfoster.request.users.CreateaUserManageRequest;
+import com.poly.petfoster.request.users.UpdateUserRequest;
 import com.poly.petfoster.response.ApiResponse;
 import com.poly.petfoster.response.common.PagiantionResponse;
 import com.poly.petfoster.response.order_history.OrderHistory;
 import com.poly.petfoster.response.product_manage.ProductManageResponse;
+import com.poly.petfoster.response.users.UserManageResponse;
 import com.poly.petfoster.service.UserService;
 import com.poly.petfoster.ultils.ImageUtils;
 import com.poly.petfoster.ultils.MailUtils;
@@ -62,12 +65,6 @@ public class UserServiceImpl implements UserService {
     PortUltil portUltil;
 
     @Override
-    public User findById(String userId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findById'");
-    }
-
-    @Override
     public UserDetails findByUsername(String username) throws UsernameNotFoundException {
 
         User existsUser = userRepository.findByUsername(username).get();
@@ -76,12 +73,11 @@ public class UserServiceImpl implements UserService {
         authorities.add(new SimpleGrantedAuthority(existsUser.getRole()));
 
         return new org.springframework.security.core.userdetails.User(
-            existsUser.getUsername(),
-            existsUser.getPassword(),
-            existsUser.getIsEmailVerified(), 
-            false, false, false, authorities
-        );
-        
+                existsUser.getUsername(),
+                existsUser.getPassword(),
+                existsUser.getIsEmailVerified(),
+                false, false, false, authorities);
+
     }
 
     @Override
@@ -101,18 +97,6 @@ public class UserServiceImpl implements UserService {
         mailUtils.sendEmail(resetPasswordRequest.getEmail(), "New password", "New your password is " + newPassword);
         return ApiResponse.builder().data(existsUser).message("Successfully!").status(200)
                 .errors(false).build();
-    }
-
-    @Override
-    public User findUserProfileByJwt(String jwt) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findUserProfileByJwt'");
-    }
-
-    @Override
-    public ApiResponse findByEmail(String email) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findByEmail'");
     }
 
     @Override
@@ -171,30 +155,8 @@ public class UserServiceImpl implements UserService {
 
         // start validate
 
-        if (!user.getEmail().equals(updateUserRequest.getEmail())) {
-            errorsMap.put("email", "Can't update email !");
-        }
-
         if (updateUserRequest.getFullname().isEmpty()) {
             errorsMap.put("fullname", "Fullname can't be blank");
-        }
-
-        if (updateUserRequest.getAddress().isEmpty()) {
-            errorsMap.put("address", "Address can't be blank");
-        }
-
-        if (updateUserRequest.getEmail().isEmpty()) {
-            errorsMap.put("email", "Email can't be blank");
-        }
-
-        if (updateUserRequest.getPhone().isEmpty()) {
-            errorsMap.put("phone", "Phone can't be blank");
-        }
-
-        if (updateUserRequest.getBirthday().orElse(null) == null) {
-            errorsMap.put("birthday", "Birthday can't be blank");
-        } else {
-            user.setBirthday(updateUserRequest.getBirthday().orElse(null));
         }
 
         if (updateUserRequest.getAvatar() != null) {
@@ -224,6 +186,7 @@ public class UserServiceImpl implements UserService {
         if (!errorsMap.isEmpty()) {
             return ApiResponse.builder()
                     .message("Update fail !")
+                    .status(501)
                     .errors(errorsMap)
                     .data(null)
                     .build();
@@ -231,13 +194,14 @@ public class UserServiceImpl implements UserService {
 
         // end validate
 
+        // user.setRole(updateUserRequest.getRole());
+        // user.setEmail(updateUserRequest.getEmail());
+
         user.setFullname(updateUserRequest.getFullname());
         user.setGender(updateUserRequest.getGender());
-        user.setRole(updateUserRequest.getRole());
-        // user.setBirthday(updateUserRequest.getBirthday().orElse(null));
+        user.setBirthday(updateUserRequest.getBirthday().orElse(null));
         user.setPhone(updateUserRequest.getPhone());
         user.setAddress(updateUserRequest.getAddress());
-        user.setEmail(updateUserRequest.getEmail());
 
         User newUser = userRepository.save(user);
 
@@ -271,6 +235,132 @@ public class UserServiceImpl implements UserService {
                 .errors(false)
                 .status(HttpStatus.OK.value())
                 .data(userRepository.save(user))
+                .build();
+    }
+
+    @Override
+    public ApiResponse getUser(String id) {
+
+        User user = userRepository.findById(id).orElse(null);
+
+        if (user == null) {
+            return ApiResponse.builder()
+                    .message("User not found !")
+                    .errors(true)
+                    .status(HttpStatus.NOT_FOUND.value())
+                    .data(null)
+                    .build();
+        }
+
+        UserManageResponse userManageResponse = UserManageResponse.builder()
+                .id(user.getId())
+                .gender(user.getGender())
+                .username(user.getUsername())
+                .role(user.getRole())
+                .email(user.getEmail())
+                .birthday(user.getBirthday())
+                .address(user.getAddress())
+                .createAt(user.getCreateAt())
+                .phone(user.getPhone())
+                .active(user.getIsActive())
+                .password("This is secret. You can't watch !")
+                .avatar(portUltil.getUrlImage(user.getAvatar()))
+                .fullname(user.getFullname()).build();
+
+        return ApiResponse.builder()
+                .message("Get user success!")
+                .errors(false)
+                .status(HttpStatus.OK.value())
+                .data(userManageResponse)
+                .build();
+    }
+
+    @Override
+    public ApiResponse createUser(CreateaUserManageRequest createaUserManageRequest) {
+        Map<String, String> errorsMap = new HashMap<>();
+        // start validate
+
+        if (createaUserManageRequest.getEmail().isEmpty()) {
+            errorsMap.put("email", "Can't update email !");
+        }
+
+        if (userRepository.existsByUsername(createaUserManageRequest.getUsername())) {
+            errorsMap.put("username", "Username " + RespMessage.EXISTS);
+        }
+
+        if (userRepository.existsByEmail(createaUserManageRequest.getEmail())) {
+            errorsMap.put("email", "Email " + RespMessage.EXISTS);
+        }
+
+        if (createaUserManageRequest.getFullname().isEmpty()) {
+            errorsMap.put("fullname", "Fullname can't be blank");
+        }
+
+        if (createaUserManageRequest.getAddress().isEmpty()) {
+            errorsMap.put("address", "Address can't be blank");
+        }
+
+        if (createaUserManageRequest.getPhone().isEmpty()) {
+            errorsMap.put("phone", "Phone can't be blank");
+        }
+
+        if (createaUserManageRequest.getBirthday().orElse(null) == null) {
+            errorsMap.put("birthday", "Birthday can't be blank");
+        }
+
+        // end validate
+
+        // check errors
+        if (!errorsMap.isEmpty()) {
+            return ApiResponse.builder()
+                    .message("Update faild !")
+                    .errors(errorsMap)
+                    .status(501)
+                    .data(null)
+                    .build();
+        }
+
+        User newUser = User.builder()
+                .address(createaUserManageRequest.getAddress())
+                .birthday(createaUserManageRequest.getBirthday().orElse(null))
+                .email(createaUserManageRequest.getEmail())
+                .fullname(createaUserManageRequest.getFullname())
+                .gender(createaUserManageRequest.getGender())
+                .isActive(true)
+                .password(passwordEncoder.encode(createaUserManageRequest.getPassword()))
+                .phone(createaUserManageRequest.getPhone())
+                .role(createaUserManageRequest.getRole())
+                .username(createaUserManageRequest.getUsername())
+                .isEmailVerified(true)
+                .build();
+
+        if (createaUserManageRequest.getAvatar() != null) {
+            if (createaUserManageRequest.getAvatar().getSize() > 500000) {
+                errorsMap.put("avartar", "Image size is too large");
+            } else {
+                try {
+                    File file = ImageUtils.createFileImage();
+
+                    createaUserManageRequest.getAvatar().transferTo(new File(file.getAbsolutePath()));
+                    newUser.setAvatar(file.getName());
+                } catch (Exception e) {
+                    System.out.println("Erorr in update avatar in Profile service impl");
+                    e.printStackTrace();
+                    return ApiResponse.builder()
+                            .message(RespMessage.INTERNAL_SERVER_ERROR.getValue())
+                            .errors(true)
+                            .status(500)
+                            .data(null)
+                            .build();
+                }
+            }
+        }
+
+        return ApiResponse.builder()
+                .message("Create succssefuly !")
+                .errors(false)
+                .status(HttpStatus.OK.value())
+                .data(userRepository.save(newUser))
                 .build();
     }
 

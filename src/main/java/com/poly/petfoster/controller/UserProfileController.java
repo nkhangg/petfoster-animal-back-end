@@ -39,7 +39,6 @@ public class UserProfileController {
     @PostMapping("/profile")
     public ResponseEntity<ApiResponse> updateProfile(@ModelAttribute("user") ProfileRepuest profileRepuest,
             @RequestHeader("Authorization") String jwt) {
-        System.out.println(profileRepuest);
         return ResponseEntity.ok(profileService.updateProfile(profileRepuest, jwt));
     }
 
